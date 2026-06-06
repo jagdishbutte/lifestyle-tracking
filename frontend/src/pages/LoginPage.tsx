@@ -8,18 +8,14 @@ const LoginPage = () => {
         password: "",
     });
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData((prev) => ({
             ...prev,
             [e.target.name]: e.target.value,
         }));
     };
 
-    const handleSubmit = (
-        e: React.FormEvent<HTMLFormElement>
-    ) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         console.log("Login Data:", formData);
@@ -29,19 +25,14 @@ const LoginPage = () => {
         <div className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
             <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
                 <div className="text-center">
-                    <h1 className="text-3xl font-bold">
-                        Welcome Back
-                    </h1>
+                    <h1 className="text-3xl font-bold">Welcome Back</h1>
 
                     <p className="mt-2 text-slate-600">
                         Sign in to continue your lifestyle journey.
                     </p>
                 </div>
 
-                <form
-                    onSubmit={handleSubmit}
-                    className="mt-8 space-y-5"
-                >
+                <form onSubmit={handleSubmit} className="mt-8 space-y-5">
                     <div>
                         <label className="mb-2 block text-sm font-medium">
                             Email
@@ -83,12 +74,14 @@ const LoginPage = () => {
                         />
                     </div>
 
-                    <button
-                        type="submit"
-                        className="w-full rounded-xl bg-teal-500 py-3 font-medium text-white transition hover:bg-teal-600"
-                    >
-                        Sign In
-                    </button>
+                    <Link to="/dashboard">
+                        <button
+                            type="submit"
+                            className="w-full rounded-xl bg-teal-500 py-3 font-medium text-white transition hover:bg-teal-600"
+                        >
+                            Sign In
+                        </button>
+                    </Link>
 
                     <div className="relative">
                         <div className="absolute inset-0 flex items-center">
