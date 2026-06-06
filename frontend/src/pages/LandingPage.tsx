@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { features } from "../data/landing.ts";
 
 const LandingPage = () => {
@@ -11,13 +12,17 @@ const LandingPage = () => {
                     </h1>
 
                     <div className="flex gap-3">
-                        <button className="rounded-lg border border-slate-300 px-4 py-2">
-                            Login
-                        </button>
+                        <Link to="/login">
+                            <button className="rounded-lg border border-slate-300 px-4 py-2">
+                                Login
+                            </button>
+                        </Link>
 
-                        <button className="rounded-lg bg-teal-500 px-4 py-2 text-white hover:bg-teal-600">
-                            Get Started
-                        </button>
+                        <Link to="/register">
+                            <button className="rounded-lg bg-teal-500 px-4 py-2 text-white hover:bg-teal-600">
+                                Get Started
+                            </button>
+                        </Link>
                     </div>
                 </div>
             </nav>
@@ -41,9 +46,11 @@ const LandingPage = () => {
                         </p>
 
                         <div className="mt-8 flex flex-wrap gap-4">
-                            <button className="rounded-xl bg-teal-500 px-6 py-3 font-medium text-white hover:bg-teal-600">
-                                Start Tracking
-                            </button>
+                            <Link to="/login">
+                                <button className="rounded-xl bg-teal-500 px-6 py-3 font-medium text-white hover:bg-teal-600">
+                                    Start Tracking
+                                </button>
+                            </Link>
                         </div>
                     </div>
 
@@ -99,9 +106,11 @@ const LandingPage = () => {
                         growth.
                     </p>
 
-                    <button className="mt-8 rounded-xl bg-white px-6 py-3 font-medium text-teal-600">
-                        Get Started
-                    </button>
+                    <Link to="/login">
+                        <button className="mt-8 rounded-xl bg-white px-6 py-3 font-medium text-teal-600">
+                            Get Started
+                        </button>
+                    </Link>
                 </div>
             </section>
 
