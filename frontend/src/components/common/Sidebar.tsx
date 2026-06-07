@@ -6,6 +6,7 @@ import {
     NotebookPen,
     Target,
     User,
+    Settings,
 } from "lucide-react";
 
 import { NavLink } from "react-router-dom";
@@ -25,6 +26,7 @@ const iconMap = {
     Analytics: ChartColumn,
     "AI Assistant": Brain,
     Profile: User,
+    Settings: Settings,
 };
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {

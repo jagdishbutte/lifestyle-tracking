@@ -12,6 +12,7 @@ import JournalPage from "./pages/JournalPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import AiAssistantPage from "./pages/AiAssistantPage";
 import ProfilePage from "./pages/ProfilePage";
+import SettingsPage from "./pages/SettingsPage";
 
 function App() {
     return (
@@ -38,6 +39,8 @@ function App() {
                 <Route path="/ai" element={<AiAssistantPage />} />
 
                 <Route path="/profile" element={<ProfilePage />} />
+
+                <Route path="/settings" element={<SettingsPage />} />
 
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>

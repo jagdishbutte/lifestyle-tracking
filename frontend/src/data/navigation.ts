@@ -74,6 +74,10 @@ export const navigationGroups: NavigationGroup[] = [
                 label: "Profile",
                 path: "/profile",
             },
+            {
+                label: "Settings",
+                path: "/settings",
+            },
         ],
     },
 ];
