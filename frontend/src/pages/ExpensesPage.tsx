@@ -6,6 +6,7 @@ import ExpenseModal from "../components/expenses/ExpenseModal";
 import { expenseCategories, initialExpenses } from "../data/expenses";
 
 import { type Expense } from "../types/expense.types";
+import StatCard from "../components/common/StatCard";
 
 const ExpensesPage = () => {
     const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
@@ -125,21 +126,15 @@ const ExpensesPage = () => {
                         />
                     </div>
 
-                    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                        <p className="text-sm text-slate-500">Total Expenses</p>
+                    <StatCard
+                        title="Total Expenses"
+                        value={`₹${totalExpenses}`}
+                    />
 
-                        <h2 className="mt-2 text-3xl font-bold text-teal-600">
-                            ₹{totalExpenses.toLocaleString()}
-                        </h2>
-                    </div>
-
-                    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                        <p className="text-sm text-slate-500">Transactions</p>
-
-                        <h2 className="mt-2 text-3xl font-bold text-teal-600">
-                            {filteredExpenses.length}
-                        </h2>
-                    </div>
+                    <StatCard
+                        title="Transactions"
+                        value={filteredExpenses.length}
+                    />
                 </div>
 
                 {/* Category Breakdown */}
