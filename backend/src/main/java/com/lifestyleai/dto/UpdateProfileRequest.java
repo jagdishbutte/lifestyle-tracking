@@ -1,6 +1,7 @@
 package com.lifestyleai.dto;
 
 import com.lifestyleai.enums.ActivityLevel;
+import com.lifestyleai.enums.CurrencyType;
 import com.lifestyleai.enums.Gender;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
@@ -31,6 +32,6 @@ public class UpdateProfileRequest {
     @Positive(message = "Monthly income must be greater than zero")
     private BigDecimal monthlyIncome;
 
-    private String currency;
+    private CurrencyType currency;
 
 }
