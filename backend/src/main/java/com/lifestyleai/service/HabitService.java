@@ -1,0 +1,22 @@
+package com.lifestyleai.service;
+
+import java.util.List;
+
+import com.lifestyleai.dto.habit.HabitRequest;
+import com.lifestyleai.dto.habit.HabitResponse;
+
+public interface HabitService {
+
+    HabitResponse addHabit(HabitRequest request);
+
+    HabitResponse getHabitById(Long id);
+
+    List<HabitResponse> getAllHabits();
+
+    List<HabitResponse> getHabitsByUser(Long userId);
+
+    HabitResponse updateHabit(Long id, HabitRequest request);
+
+    void deleteHabit(Long id);
+
+}

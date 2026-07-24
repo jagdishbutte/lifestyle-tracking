@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.lifestyleai.dto.auth.LoginRequest;
 import com.lifestyleai.dto.auth.LoginResponse;
@@ -17,7 +18,6 @@ import com.lifestyleai.exception.ResourceNotFoundException;
 import com.lifestyleai.exception.UnauthorizedException;
 import com.lifestyleai.repository.UserRepository;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Transactional
@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService {
 	
 	private final UserRepository userRepository;
+	private final HabitTemplateService habitTemplateService;
 	private final ModelMapper mapper;
 	
 	private User findUserById(Long id) {
@@ -42,9 +43,11 @@ public class UserServiceImpl implements UserService {
 		
 		User user = mapper.map(request, User.class);
 		
-        userRepository.save(user);
+		User savedUser = userRepository.save(user);
 		
-        return mapper.map(user, UserResponse.class);
+		habitTemplateService.initializeUserHabits(savedUser);
+		
+        return mapper.map(savedUser, UserResponse.class);
 	}
 
 	@Override

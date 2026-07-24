@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.lifestyleai.dto.expense.ExpenseRequest;
 import com.lifestyleai.dto.expense.ExpenseResponse;
@@ -14,7 +15,6 @@ import com.lifestyleai.exception.ResourceNotFoundException;
 import com.lifestyleai.repository.ExpenseRepository;
 import com.lifestyleai.repository.UserRepository;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
