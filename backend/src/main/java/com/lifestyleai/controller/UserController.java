@@ -1,9 +1,9 @@
 package com.lifestyleai.controller;
 
-import com.lifestyleai.dto.ApiResponse;
-import com.lifestyleai.dto.UpdatePasswordRequest;
-import com.lifestyleai.dto.UpdateProfileRequest;
-import com.lifestyleai.dto.UserResponse;
+import com.lifestyleai.dto.common.ApiResponse;
+import com.lifestyleai.dto.user.UpdatePasswordRequest;
+import com.lifestyleai.dto.user.UpdateProfileRequest;
+import com.lifestyleai.dto.user.UserResponse;
 import com.lifestyleai.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class UserController {
     public ResponseEntity<ApiResponse<UserResponse>> getUserById(
             @PathVariable Long id) {
 
-        UserResponse response = userService.getUserById(id);
+        com.lifestyleai.dto.user.UserResponse response = userService.getUserById(id);
 
         return ResponseEntity.ok(
                 new ApiResponse<>(

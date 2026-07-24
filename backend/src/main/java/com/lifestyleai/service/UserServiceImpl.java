@@ -6,12 +6,12 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import com.lifestyleai.dto.LoginRequest;
-import com.lifestyleai.dto.LoginResponse;
-import com.lifestyleai.dto.RegisterRequest;
-import com.lifestyleai.dto.UpdatePasswordRequest;
-import com.lifestyleai.dto.UpdateProfileRequest;
-import com.lifestyleai.dto.UserResponse;
+import com.lifestyleai.dto.auth.LoginRequest;
+import com.lifestyleai.dto.auth.LoginResponse;
+import com.lifestyleai.dto.auth.RegisterRequest;
+import com.lifestyleai.dto.user.UpdatePasswordRequest;
+import com.lifestyleai.dto.user.UpdateProfileRequest;
+import com.lifestyleai.dto.user.UserResponse;
 import com.lifestyleai.entity.User;
 import com.lifestyleai.exception.ResourceNotFoundException;
 import com.lifestyleai.exception.UnauthorizedException;

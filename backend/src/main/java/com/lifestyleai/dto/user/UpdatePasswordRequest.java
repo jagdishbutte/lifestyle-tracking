@@ -1,4 +1,4 @@
-package com.lifestyleai.dto;
+package com.lifestyleai.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

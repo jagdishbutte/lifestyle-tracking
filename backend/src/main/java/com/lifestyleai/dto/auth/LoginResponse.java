@@ -1,4 +1,4 @@
-package com.lifestyleai.dto;
+package com.lifestyleai.dto.auth;
 
 import lombok.*;
 

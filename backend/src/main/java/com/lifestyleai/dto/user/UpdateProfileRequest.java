@@ -1,8 +1,8 @@
-package com.lifestyleai.dto;
+package com.lifestyleai.dto.user;
 
-import com.lifestyleai.enums.ActivityLevel;
-import com.lifestyleai.enums.CurrencyType;
-import com.lifestyleai.enums.Gender;
+import com.lifestyleai.enums.user.ActivityLevel;
+import com.lifestyleai.enums.user.CurrencyType;
+import com.lifestyleai.enums.user.Gender;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 

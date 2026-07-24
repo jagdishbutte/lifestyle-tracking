@@ -1,8 +1,8 @@
 package com.lifestyleai.entity;
 
-import com.lifestyleai.enums.ActivityLevel;
-import com.lifestyleai.enums.CurrencyType;
-import com.lifestyleai.enums.Gender;
+import com.lifestyleai.enums.user.ActivityLevel;
+import com.lifestyleai.enums.user.CurrencyType;
+import com.lifestyleai.enums.user.Gender;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class User extends BaseEntity {
 
     @Column(nullable = false, length = 50)

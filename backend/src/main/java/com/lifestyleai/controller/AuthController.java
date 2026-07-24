@@ -1,10 +1,10 @@
 package com.lifestyleai.controller;
 
-import com.lifestyleai.dto.LoginRequest;
-import com.lifestyleai.dto.LoginResponse;
-import com.lifestyleai.dto.RegisterRequest;
-import com.lifestyleai.dto.UserResponse;
-import com.lifestyleai.dto.ApiResponse;
+import com.lifestyleai.dto.auth.LoginRequest;
+import com.lifestyleai.dto.auth.LoginResponse;
+import com.lifestyleai.dto.auth.RegisterRequest;
+import com.lifestyleai.dto.user.UserResponse;
+import com.lifestyleai.dto.common.ApiResponse;
 import com.lifestyleai.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

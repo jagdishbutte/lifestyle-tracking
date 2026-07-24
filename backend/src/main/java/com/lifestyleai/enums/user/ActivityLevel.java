@@ -1,4 +1,4 @@
-package com.lifestyleai.enums;
+package com.lifestyleai.enums.user;
 
 public enum ActivityLevel {
     SEDENTARY,
