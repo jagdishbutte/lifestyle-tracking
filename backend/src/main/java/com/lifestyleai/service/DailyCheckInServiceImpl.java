@@ -1,0 +1,106 @@
+package com.lifestyleai.service;
+
+import java.time.LocalDate;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.lifestyleai.dto.checkin.DailyCheckInRequest;
+import com.lifestyleai.dto.checkin.DailyCheckInResponse;
+import com.lifestyleai.entity.DailyCheckIn;
+import com.lifestyleai.entity.User;
+import com.lifestyleai.exception.ResourceNotFoundException;
+import com.lifestyleai.repository.DailyCheckInRepository;
+import com.lifestyleai.repository.DietEntryRepository;
+import com.lifestyleai.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class DailyCheckInServiceImpl implements DailyCheckInService {
+
+    private final DailyCheckInRepository dailyCheckInRepository;
+    private final UserRepository userRepository;
+    private final DietEntryRepository dietEntryRepository;
+
+    @Override
+    public DailyCheckInResponse saveTodayCheckIn(DailyCheckInRequest request) {
+
+        User user = findUser(request.getUserId());
+
+        LocalDate today = LocalDate.now();
+
+        DailyCheckIn checkIn = dailyCheckInRepository
+                .findByUserIdAndDate(user.getId(), today)
+                .orElseGet(() -> {
+                    DailyCheckIn newCheckIn = new DailyCheckIn();
+                    newCheckIn.setUser(user);
+                    newCheckIn.setDate(today);
+                    return newCheckIn;
+                });
+
+        checkIn.setSleepHours(request.getSleepHours());
+        checkIn.setWaterGlasses(request.getWaterGlasses());
+        checkIn.setStepsWalked(request.getStepsWalked());
+        checkIn.setWellbeingScore(request.getWellbeingScore());
+
+        dailyCheckInRepository.save(checkIn);
+
+        return buildResponse(checkIn);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DailyCheckInResponse getTodayCheckIn(Long userId) {
+
+        DailyCheckIn checkIn = dailyCheckInRepository
+                .findByUserIdAndDate(userId, LocalDate.now())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Today's check-in not found."));
+
+        return buildResponse(checkIn);
+    }
+
+    /* ==========================================================
+                            Helper Methods
+       ========================================================== */
+
+    private User findUser(Long userId) {
+
+        return userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found."));
+    }
+
+    private DailyCheckInResponse buildResponse(DailyCheckIn checkIn) {
+
+        User user = checkIn.getUser();
+
+        DailyCheckInResponse response = new DailyCheckInResponse();
+
+        response.setId(checkIn.getId());
+        response.setDate(checkIn.getDate());
+
+        response.setSleepHours(checkIn.getSleepHours());
+        response.setWaterGlasses(checkIn.getWaterGlasses());
+        response.setStepsWalked(checkIn.getStepsWalked());
+        response.setWellbeingScore(checkIn.getWellbeingScore());
+
+        response.setSleepGoalHours(user.getSleepGoalHours());
+        response.setWaterGoalGlasses(user.getWaterGoalGlasses());
+        response.setStepsGoal(user.getStepsGoal());
+        response.setDailyCalorieGoal(user.getDailyCalorieGoal());
+
+        Double caloriesConsumed = dietEntryRepository
+                .getTotalCaloriesByUserAndDate(
+                        user.getId(),
+                        checkIn.getDate());
+
+        response.setCaloriesConsumed(caloriesConsumed.intValue());
+
+        return response;
+    }
+
+}
