@@ -14,9 +14,9 @@ import com.lifestyleai.dto.user.UpdatePasswordRequest;
 import com.lifestyleai.dto.user.UpdateProfileRequest;
 import com.lifestyleai.dto.user.UserResponse;
 import com.lifestyleai.entity.User;
-import com.lifestyleai.exception.ResourceNotFoundException;
 import com.lifestyleai.exception.UnauthorizedException;
 import com.lifestyleai.repository.UserRepository;
+import com.lifestyleai.service.common.UserHelper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,12 +27,8 @@ public class UserServiceImpl implements UserService {
 	
 	private final UserRepository userRepository;
 	private final HabitTemplateService habitTemplateService;
+	private final UserHelper userHelper;
 	private final ModelMapper mapper;
-	
-	private User findUserById(Long id) {
-	    return userRepository.findById(id)
-	            .orElseThrow(() -> new ResourceNotFoundException("User not found."));
-	}
 
 	@Override
 	public UserResponse register(RegisterRequest request) {
@@ -52,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public LoginResponse login(LoginRequest request) {
-		User user = userRepository.findByEmail(request.getEmail())
+		User user = userRepository.findByEmailAndIsActiveTrue(request.getEmail())
                 .orElseThrow(() -> new UnauthorizedException("Invalid email or password."));
 
         return mapper.map(user, LoginResponse.class);
@@ -61,7 +57,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserResponse getUserById(Long id) {
 
-		User user = findUserById(id);
+		User user = userHelper.findActiveUser(id);
 
 	    return mapper.map(user, UserResponse.class);
 	}
@@ -69,7 +65,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<UserResponse> getAllUsers() {
 
-	    List<User> users = userRepository.findAll();
+	    List<User> users = userRepository.findByIsActiveTrue();
 
 	    return users.stream()
 	            .map(user -> mapper.map(user, UserResponse.class))
@@ -79,7 +75,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserResponse updateProfile(Long id, UpdateProfileRequest request) {
 
-		User user = findUserById(id);
+		User user = userHelper.findActiveUser(id);
 
 	    user.setGender(request.getGender());
 	    user.setDateOfBirth(request.getDateOfBirth());
@@ -103,7 +99,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void updatePassword(Long id, UpdatePasswordRequest request) {
 
-		User user = findUserById(id);
+		User user = userHelper.findActiveUser(id);
 
 	    // Later:
 	    // validate current password
@@ -117,9 +113,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void deleteUser(Long id) {
 
-		User user = findUserById(id);
+		User user = userHelper.findActiveUser(id);
 
-	    userRepository.delete(user);
+		user.setIsActive(false);
+
+		userRepository.save(user);
 	}
 
 }

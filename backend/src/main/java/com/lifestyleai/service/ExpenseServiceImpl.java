@@ -13,7 +13,7 @@ import com.lifestyleai.entity.Expense;
 import com.lifestyleai.entity.User;
 import com.lifestyleai.exception.ResourceNotFoundException;
 import com.lifestyleai.repository.ExpenseRepository;
-import com.lifestyleai.repository.UserRepository;
+import com.lifestyleai.service.common.UserHelper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,19 +23,13 @@ import lombok.RequiredArgsConstructor;
 public class ExpenseServiceImpl implements ExpenseService {
 	
 	private final ExpenseRepository expenseRepository;
-	private final UserRepository userRepository;
+	private final UserHelper userHelper;
 	private final ModelMapper mapper;
-
-	private Expense findExpenseById(Long id) {
-	    return expenseRepository.findById(id)
-	    		.orElseThrow(() -> new ResourceNotFoundException("Expense not found."));
-	}
 	
 	@Override
 	public ExpenseResponse addExpense(ExpenseRequest request) {
 
-		User user = userRepository.findById(request.getUserId())
-	            .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+		User user = userHelper.findActiveUser(request.getUserId());
 
 		Expense expense = new Expense();
 
@@ -118,6 +112,12 @@ public class ExpenseServiceImpl implements ExpenseService {
 	                return response;
 	            })
 	            .toList();
+	}
+	
+	// Helper Methods
+	private Expense findExpenseById(Long id) {
+	    return expenseRepository.findById(id)
+	    		.orElseThrow(() -> new ResourceNotFoundException("Expense not found."));
 	}
 
 }

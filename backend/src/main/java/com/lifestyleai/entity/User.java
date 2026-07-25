@@ -63,5 +63,8 @@ public class User extends BaseEntity {
 
     @Column(nullable = false)
     private Integer dailyCalorieGoal = 2200;
+    
+    @Column(nullable = false)
+    private Boolean isActive = true;
 
 }

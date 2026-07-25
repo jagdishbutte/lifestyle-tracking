@@ -12,7 +12,7 @@ import com.lifestyleai.entity.User;
 import com.lifestyleai.exception.ResourceNotFoundException;
 import com.lifestyleai.repository.DailyCheckInRepository;
 import com.lifestyleai.repository.DietEntryRepository;
-import com.lifestyleai.repository.UserRepository;
+import com.lifestyleai.service.common.UserHelper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,13 +22,13 @@ import lombok.RequiredArgsConstructor;
 public class DailyCheckInServiceImpl implements DailyCheckInService {
 
     private final DailyCheckInRepository dailyCheckInRepository;
-    private final UserRepository userRepository;
+    private final UserHelper userHelper;
     private final DietEntryRepository dietEntryRepository;
 
     @Override
     public DailyCheckInResponse saveTodayCheckIn(DailyCheckInRequest request) {
 
-        User user = findUser(request.getUserId());
+        User user = userHelper.findActiveUser(request.getUserId());
 
         LocalDate today = LocalDate.now();
 
@@ -66,13 +66,6 @@ public class DailyCheckInServiceImpl implements DailyCheckInService {
     /* ==========================================================
                             Helper Methods
        ========================================================== */
-
-    private User findUser(Long userId) {
-
-        return userRepository.findById(userId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found."));
-    }
 
     private DailyCheckInResponse buildResponse(DailyCheckIn checkIn) {
 

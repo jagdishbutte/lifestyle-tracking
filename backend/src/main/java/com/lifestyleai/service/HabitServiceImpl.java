@@ -12,7 +12,7 @@ import com.lifestyleai.entity.Habit;
 import com.lifestyleai.entity.User;
 import com.lifestyleai.exception.ResourceNotFoundException;
 import com.lifestyleai.repository.HabitRepository;
-import com.lifestyleai.repository.UserRepository;
+import com.lifestyleai.service.common.UserHelper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,14 +22,13 @@ import lombok.RequiredArgsConstructor;
 public class HabitServiceImpl implements HabitService {
 
     private final HabitRepository habitRepository;
-    private final UserRepository userRepository;
+    private final UserHelper userHelper;
     private final ModelMapper mapper;
 
     @Override
     public HabitResponse addHabit(HabitRequest request) {
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+    	User user = userHelper.findActiveUser(request.getUserId());
 
         Habit habit = new Habit();
 

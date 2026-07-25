@@ -24,7 +24,7 @@ import com.lifestyleai.enums.food.MealType;
 import com.lifestyleai.exception.ResourceNotFoundException;
 import com.lifestyleai.repository.DietEntryRepository;
 import com.lifestyleai.repository.FoodRepository;
-import com.lifestyleai.repository.UserRepository;
+import com.lifestyleai.service.common.UserHelper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,13 +35,13 @@ public class DietServiceImpl implements DietService {
 
     private final DietEntryRepository dietEntryRepository;
     private final FoodRepository foodRepository;
-    private final UserRepository userRepository;
+    private final UserHelper userHelper;
     private final ModelMapper mapper;
 
     @Override
     public DailyDietResponse addMeal(AddMealRequest request) {
 
-        User user = findUser(request.getUserId());
+        User user = userHelper.findActiveUser(request.getUserId());
 
         List<DietEntry> entries = new ArrayList<>();
 
@@ -127,14 +127,6 @@ public class DietServiceImpl implements DietService {
     /* ==========================================================
                         Helper Methods
        ========================================================== */
-
-    private User findUser(Long userId) {
-
-        return userRepository.findById(userId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "User not found with id : " + userId));
-    }
 
     private Food findFood(Long foodId) {
 
