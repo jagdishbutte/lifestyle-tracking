@@ -50,6 +50,18 @@ public class User extends BaseEntity {
     private BigDecimal monthlyIncome;
 
     @Enumerated(EnumType.STRING)
-    private CurrencyType currency;
+    private CurrencyType currency = CurrencyType.INR;
+    
+    @Column(nullable = false)
+    private Double sleepGoalHours = 8.0;
+
+    @Column(nullable = false)
+    private Integer waterGoalGlasses = 8;
+
+    @Column(nullable = false)
+    private Integer stepsGoal = 8000;
+
+    @Column(nullable = false)
+    private Integer dailyCalorieGoal = 2200;
 
 }

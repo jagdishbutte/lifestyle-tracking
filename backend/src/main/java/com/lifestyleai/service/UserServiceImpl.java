@@ -90,6 +90,10 @@ public class UserServiceImpl implements UserService {
 	    user.setOccupation(request.getOccupation());
 	    user.setMonthlyIncome(request.getMonthlyIncome());
 	    user.setCurrency(request.getCurrency());
+	    user.setSleepGoalHours(request.getSleepGoalHours());
+	    user.setWaterGoalGlasses(request.getWaterGoalGlasses());
+	    user.setStepsGoal(request.getStepsGoal());
+	    user.setDailyCalorieGoal(request.getDailyCalorieGoal());
 
 	    userRepository.save(user);
 

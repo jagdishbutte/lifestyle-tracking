@@ -38,6 +38,14 @@ public class UserResponse {
     private BigDecimal monthlyIncome;
 
     private CurrencyType currency;
+    
+    private Double sleepGoalHours;
+
+    private Integer waterGoalGlasses;
+
+    private Integer stepsGoal;
+
+    private Integer dailyCalorieGoal;
 
     private LocalDateTime createdAt;
 
