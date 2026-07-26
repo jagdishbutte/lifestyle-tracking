@@ -11,9 +11,11 @@ import com.lifestyleai.dto.habit.HabitLogRequest;
 import com.lifestyleai.dto.habit.HabitLogResponse;
 import com.lifestyleai.entity.Habit;
 import com.lifestyleai.entity.HabitLog;
+import com.lifestyleai.entity.User;
 import com.lifestyleai.exception.ResourceNotFoundException;
 import com.lifestyleai.repository.HabitLogRepository;
 import com.lifestyleai.repository.HabitRepository;
+import com.lifestyleai.service.common.UserHelper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,20 +26,29 @@ public class HabitLogServiceImpl implements HabitLogService {
 
     private final HabitLogRepository habitLogRepository;
     private final HabitRepository habitRepository;
+    private final UserHelper userHelper;
     private final ModelMapper mapper;
 
     @Override
     public HabitLogResponse markHabit(HabitLogRequest request) {
+    	
+    	User user = userHelper.findActiveUser(request.getUserId());
 
-        Habit habit = habitRepository.findById(request.getHabitId())
-                .orElseThrow(() -> new ResourceNotFoundException("Habit not found."));
-
-        HabitLog habitLog = habitLogRepository
-                .findByHabitIdAndDate(request.getHabitId(), request.getDate())
+    	Habit habit = habitRepository
+    	        .findByIdAndUserIdAndIsActiveTrue(
+    	                request.getHabitId(),
+    	                user.getId())
+    	        .orElseThrow(() ->
+    	                new ResourceNotFoundException("Habit not found."));
+    	
+    	HabitLog habitLog = habitLogRepository
+                .findByHabitIdAndDate(
+                        habit.getId(),
+                        LocalDate.now())
                 .orElse(new HabitLog());
 
         habitLog.setHabit(habit);
-        habitLog.setDate(request.getDate());
+        habitLog.setDate(LocalDate.now());
         habitLog.setCompleted(request.getCompleted());
 
         HabitLog savedLog = habitLogRepository.save(habitLog);
