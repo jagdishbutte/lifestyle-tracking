@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import type { LoginFormData } from "../types/auth.types";
+import { Link, useNavigate } from "react-router-dom";
+import type { LoginRequest } from "../types/auth";
+import toast from "react-hot-toast";
+import { login } from "../services/authService";
+import { getErrorMessage } from "../utils/errorHandler";
 
 const LoginPage = () => {
-    const [formData, setFormData] = useState<LoginFormData>({
+    const [formData, setFormData] = useState<LoginRequest>({
         email: "",
         password: "",
     });
@@ -15,10 +18,25 @@ const LoginPage = () => {
         }));
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
 
-        console.log("Login Data:", formData);
+        try {
+            const response = await login(formData as LoginRequest);
+
+            if (response.success) {
+                toast.success(response.message);
+
+                // TODO: Store user in context/localStorage
+                // console.log(response.data);
+
+                navigate("/dashboard");
+            }
+        } catch (error) {
+            toast.error(getErrorMessage(error));
+        }
     };
 
     return (
@@ -74,14 +92,12 @@ const LoginPage = () => {
                         />
                     </div>
 
-                    <Link to="/dashboard">
-                        <button
-                            type="submit"
-                            className="w-full rounded-xl bg-teal-500 py-3 font-medium text-white transition hover:bg-teal-600"
-                        >
-                            Sign In
-                        </button>
-                    </Link>
+                    <button
+                        type="submit"
+                        className="w-full rounded-xl bg-teal-500 py-3 font-medium text-white transition hover:bg-teal-600"
+                    >
+                        Sign In
+                    </button>
 
                     <div className="relative">
                         <div className="absolute inset-0 flex items-center">

@@ -1,23 +1,21 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import type { RegisterFormData } from "../types/auth.types";
+import { Link, useNavigate } from "react-router-dom";
+import type { RegisterFormData, RegisterRequest } from "../types/auth";
+import toast from "react-hot-toast";
+import { registerUser } from "../services/authService";
+import { getErrorMessage } from "../utils/errorHandler";
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState<RegisterFormData>({
-        name: "",
+        firstName: "",
+        lastName: "",
         email: "",
         password: "",
         confirmPassword: "",
-
-        age: "",
-        gender: "",
-
-        heightCm: "",
-        weightKg: "",
     });
 
     const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     ) => {
         setFormData((prev) => ({
             ...prev,
@@ -25,15 +23,34 @@ const RegisterPage = () => {
         }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
 
         if (formData.password !== formData.confirmPassword) {
-            alert("Passwords do not match");
+            toast.error("Passwords do not match.");
             return;
         }
 
-        console.log("Registration Data:", formData);
+        try {
+            const request: RegisterRequest = {
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                email: formData.email,
+                password: formData.password,
+            };
+
+            const response = await registerUser(request);
+
+            if (response.success) {
+                toast.success(response.message);
+
+                navigate("/login");
+            }
+        } catch (error) {
+            toast.error(getErrorMessage(error));
+        }
     };
 
     return (
@@ -47,22 +64,35 @@ const RegisterPage = () => {
                     Start your lifestyle improvement journey.
                 </p>
 
-                <form
-                    onSubmit={handleSubmit}
-                    className="mt-8 space-y-5"
-                >
-                    <div>
-                        <label className="mb-2 block text-sm font-medium">
-                            Full Name
-                        </label>
+                <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <div>
+                            <label className="mb-2 block text-sm font-medium">
+                                First Name
+                            </label>
 
-                        <input
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            className="w-full rounded-xl border border-slate-300 px-4 py-3"
-                        />
+                            <input
+                                type="text"
+                                name="firstName"
+                                value={formData.firstName}
+                                onChange={handleChange}
+                                className="w-full rounded-xl border border-slate-300 px-4 py-3"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="mb-2 block text-sm font-medium">
+                                Last Name
+                            </label>
+
+                            <input
+                                type="text"
+                                name="lastName"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                                className="w-full rounded-xl border border-slate-300 px-4 py-3"
+                            />
+                        </div>
                     </div>
 
                     <div>
@@ -109,60 +139,6 @@ const RegisterPage = () => {
                         </div>
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-2">
-                        <input
-                            type="number"
-                            name="age"
-                            placeholder="Age"
-                            value={formData.age}
-                            onChange={handleChange}
-                            className="rounded-xl border border-slate-300 px-4 py-3"
-                        />
-
-                        <select
-                            name="gender"
-                            value={formData.gender}
-                            onChange={handleChange}
-                            className="rounded-xl border border-slate-300 px-4 py-3"
-                        >
-                            <option value="">
-                                Select Gender
-                            </option>
-
-                            <option value="MALE">
-                                Male
-                            </option>
-
-                            <option value="FEMALE">
-                                Female
-                            </option>
-
-                            <option value="OTHER">
-                                Other
-                            </option>
-                        </select>
-                    </div>
-
-                    <div className="grid gap-4 md:grid-cols-2">
-                        <input
-                            type="number"
-                            name="heightCm"
-                            placeholder="Height (cm)"
-                            value={formData.heightCm}
-                            onChange={handleChange}
-                            className="rounded-xl border border-slate-300 px-4 py-3"
-                        />
-
-                        <input
-                            type="number"
-                            name="weightKg"
-                            placeholder="Weight (kg)"
-                            value={formData.weightKg}
-                            onChange={handleChange}
-                            className="rounded-xl border border-slate-300 px-4 py-3"
-                        />
-                    </div>
-
                     <button
                         type="submit"
                         className="w-full rounded-xl bg-teal-500 py-3 font-medium text-white hover:bg-teal-600"
@@ -172,10 +148,7 @@ const RegisterPage = () => {
 
                     <p className="text-center text-sm text-slate-600">
                         Already have an account?{" "}
-                        <Link
-                            to="/login"
-                            className="text-teal-600"
-                        >
+                        <Link to="/login" className="text-teal-600">
                             Login
                         </Link>
                     </p>
