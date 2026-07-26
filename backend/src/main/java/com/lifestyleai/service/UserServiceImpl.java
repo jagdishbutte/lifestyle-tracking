@@ -14,7 +14,7 @@ import com.lifestyleai.dto.user.UpdatePasswordRequest;
 import com.lifestyleai.dto.user.UpdateProfileRequest;
 import com.lifestyleai.dto.user.UserResponse;
 import com.lifestyleai.entity.User;
-import com.lifestyleai.exception.UnauthorizedException;
+import com.lifestyleai.exception.BadCredentialsException;
 import com.lifestyleai.repository.UserRepository;
 import com.lifestyleai.service.common.UserHelper;
 
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
 	public UserResponse register(RegisterRequest request) {
 		
 		if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists.");
+            throw new BadCredentialsException("Email already exists.");
         }
 		
 		User user = mapper.map(request, User.class);
@@ -49,7 +49,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public LoginResponse login(LoginRequest request) {
 		User user = userRepository.findByEmailAndIsActiveTrue(request.getEmail())
-                .orElseThrow(() -> new UnauthorizedException("Invalid email or password."));
+                .orElseThrow(() -> new BadCredentialsException("Invalid email or password."));
+		
+		// Password check will be implemented during spring security
 
         return mapper.map(user, LoginResponse.class);
 	}
