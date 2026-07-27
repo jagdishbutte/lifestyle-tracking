@@ -1,4 +1,4 @@
-import type { Habit } from "../types/habit.types";
+import type { Habit } from "../types/habit";
 
 export const habits: Habit[] = [
     {

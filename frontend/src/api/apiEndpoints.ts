@@ -12,12 +12,18 @@ export const CHECKIN_API = {
     TODAY: "/api/checkin/user",
 };
 
+export const HABIT_API = {
+    ACTIVE: "/api/habits/user",
+    BASE: "/api/habits",
+};
+
+export const HABIT_LOG_API = {
+    COMPLETION: "/api/habit-logs/completion",
+    TODAY: "/api/habit-logs/user",
+    HISTORY: "/api/habit-logs/user",
+};
+
 export const EXPENSE_API = {
     CREATE: "/api/expenses",
     ALL: "/api/expenses",
-};
-
-export const HABIT_API = {
-    ALL: "/api/habits",
-    LOG: "/api/habit-logs",
 };

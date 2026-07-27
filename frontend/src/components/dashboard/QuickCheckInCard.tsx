@@ -141,6 +141,10 @@ const QuickCheckInCard = () => {
                     />
                 </div>
                 <div>
+                    <label className="mb-2 block text-sm text-slate-600">
+                        How's your day going?
+                    </label>
+
                     {wellbeingOptions.map((item) => (
                         <button
                             key={item.score}
