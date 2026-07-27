@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/habit-logs")
 @RequiredArgsConstructor
-//@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173")
 public class HabitLogController {
 
     private final HabitLogService habitLogService;

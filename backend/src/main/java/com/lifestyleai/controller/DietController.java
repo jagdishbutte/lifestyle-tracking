@@ -4,11 +4,15 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import com.lifestyleai.dto.common.ApiResponse;
 import com.lifestyleai.dto.food.AddMealRequest;
 import com.lifestyleai.dto.food.DailyDietResponse;
+import com.lifestyleai.dto.food.DietEntryResponse;
+import com.lifestyleai.dto.food.UpdateDietEntryRequest;
 import com.lifestyleai.service.DietService;
 
 import jakarta.validation.Valid;
@@ -18,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/diet")
 @RequiredArgsConstructor
 @Validated
+@CrossOrigin(origins = "http://localhost:5173")
 public class DietController {
 
     private final DietService dietService;
@@ -28,11 +33,16 @@ public class DietController {
      * Function : Adds multiple food items for a meal.
      */
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public DailyDietResponse addMeal(
+    public ResponseEntity<ApiResponse<DailyDietResponse>> addMeal(
             @Valid @RequestBody AddMealRequest request) {
 
-        return dietService.addMeal(request);
+        DailyDietResponse response = dietService.addMeal(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(
+                        true,
+                        "Meal added successfully.",
+                        response));
     }
 
     /**
@@ -41,13 +51,19 @@ public class DietController {
      * Function : Returns complete diet summary for a specific date.
      */
     @GetMapping("/user/{userId}/date/{date}")
-    public DailyDietResponse getDietByDate(
+    public ResponseEntity<ApiResponse<DailyDietResponse>> getDietByDate(
             @PathVariable Long userId,
             @PathVariable
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate date) {
 
-        return dietService.getDietByDate(userId, date);
+        DailyDietResponse response = dietService.getDietByDate(userId, date);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Diet fetched successfully.",
+                        response));
     }
 
     /**
@@ -56,10 +72,16 @@ public class DietController {
      * Function : Returns today's diet summary.
      */
     @GetMapping("/user/{userId}/today")
-    public com.lifestyleai.dto.food.DailyDietResponse getTodayDiet(
+    public ResponseEntity<ApiResponse<DailyDietResponse>> getTodayDiet(
             @PathVariable Long userId) {
 
-        return dietService.getTodayDiet(userId);
+        DailyDietResponse response = dietService.getTodayDiet(userId);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Today's diet fetched successfully.",
+                        response));
     }
 
     /**
@@ -68,11 +90,18 @@ public class DietController {
      * Function : Updates a single diet entry.
      */
     @PutMapping("/entry/{dietEntryId}")
-    public com.lifestyleai.dto.food.DietEntryResponse updateDietEntry(
+    public ResponseEntity<ApiResponse<DietEntryResponse>> updateDietEntry(
             @PathVariable Long dietEntryId,
-            @Valid @RequestBody com.lifestyleai.dto.food.UpdateDietEntryRequest request) {
+            @Valid @RequestBody UpdateDietEntryRequest request) {
 
-        return dietService.updateDietEntry(dietEntryId, request);
+        DietEntryResponse response =
+                dietService.updateDietEntry(dietEntryId, request);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Diet entry updated successfully.",
+                        response));
     }
 
     /**
@@ -81,11 +110,16 @@ public class DietController {
      * Function : Deletes a single diet entry.
      */
     @DeleteMapping("/entry/{dietEntryId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteDietEntry(
+    public ResponseEntity<ApiResponse<Void>> deleteDietEntry(
             @PathVariable Long dietEntryId) {
 
         dietService.deleteDietEntry(dietEntryId);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Diet entry deleted successfully.",
+                        null));
     }
 
 }

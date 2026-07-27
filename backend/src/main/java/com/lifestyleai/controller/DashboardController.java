@@ -1,10 +1,13 @@
 package com.lifestyleai.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lifestyleai.dto.common.ApiResponse;
 import com.lifestyleai.dto.dashboard.DashboardSummaryResponse;
 import com.lifestyleai.service.DashboardService;
 
@@ -13,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/dashboard")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 public class DashboardController {
 
     private final DashboardService dashboardService;
@@ -23,10 +27,17 @@ public class DashboardController {
      * Function : Returns dashboard summary cards.
      */
     @GetMapping("/summary/{userId}")
-    public DashboardSummaryResponse getDashboardSummary(
+    public ResponseEntity<ApiResponse<DashboardSummaryResponse>> getDashboardSummary(
             @PathVariable Long userId) {
 
-        return dashboardService.getDashboardSummary(userId);
+        DashboardSummaryResponse response =
+                dashboardService.getDashboardSummary(userId);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Dashboard summary fetched successfully.",
+                        response));
     }
 
 }

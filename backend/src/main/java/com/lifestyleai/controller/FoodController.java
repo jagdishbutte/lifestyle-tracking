@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/foods")
 @RequiredArgsConstructor
 @Validated
+@CrossOrigin(origins = "http://localhost:5173")
 public class FoodController {
 
     private final FoodService foodService;

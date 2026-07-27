@@ -10,5 +10,4 @@ public class HomeController {
     public String home() {
         return "Lifestyle AI Backend is running successfully 🚀";
     }
-
 }

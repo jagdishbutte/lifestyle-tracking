@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/expenses")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 public class ExpenseController {
 
     private final ExpenseService expenseService;
