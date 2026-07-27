@@ -48,30 +48,6 @@ public class HabitServiceImpl implements HabitService {
     }
 
     @Override
-    public HabitResponse getHabitById(Long id) {
-
-        Habit habit = findHabit(id);
-
-        HabitResponse response = mapper.map(habit, HabitResponse.class);
-        response.setUserId(habit.getUser().getId());
-
-        return response;
-    }
-
-    @Override
-    public List<HabitResponse> getAllHabits() {
-
-        return habitRepository.findAll()
-                .stream()
-                .map(habit -> {
-                    HabitResponse response = mapper.map(habit, HabitResponse.class);
-                    response.setUserId(habit.getUser().getId());
-                    return response;
-                })
-                .toList();
-    }
-
-    @Override
     public List<HabitResponse> getHabitsByUser(Long userId) {
 
         return habitRepository.findByUserIdAndIsActiveTrue(userId)

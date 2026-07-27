@@ -20,8 +20,8 @@ import com.lifestyleai.service.common.UserHelper;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
+@Transactional
 public class HabitLogServiceImpl implements HabitLogService {
 
     private final HabitLogRepository habitLogRepository;
@@ -30,18 +30,18 @@ public class HabitLogServiceImpl implements HabitLogService {
     private final ModelMapper mapper;
 
     @Override
-    public HabitLogResponse markHabit(HabitLogRequest request) {
-    	
-    	User user = userHelper.findActiveUser(request.getUserId());
+    public HabitLogResponse updateHabitCompletion(HabitLogRequest request) {
 
-    	Habit habit = habitRepository
-    	        .findByIdAndUserIdAndIsActiveTrue(
-    	                request.getHabitId(),
-    	                user.getId())
-    	        .orElseThrow(() ->
-    	                new ResourceNotFoundException("Habit not found."));
-    	
-    	HabitLog habitLog = habitLogRepository
+        User user = userHelper.findActiveUser(request.getUserId());
+
+        Habit habit = habitRepository
+                .findByIdAndUserIdAndIsActiveTrue(
+                        request.getHabitId(),
+                        user.getId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Habit not found."));
+
+        HabitLog habitLog = habitLogRepository
                 .findByHabitIdAndDate(
                         habit.getId(),
                         LocalDate.now())
@@ -53,56 +53,72 @@ public class HabitLogServiceImpl implements HabitLogService {
 
         HabitLog savedLog = habitLogRepository.save(habitLog);
 
-        HabitLogResponse response = mapper.map(savedLog, HabitLogResponse.class);
-        response.setHabitId(habit.getId());
-
-        return response;
+        return mapToResponse(savedLog);
     }
 
     @Override
-    public HabitLogResponse getHabitLogById(Long id) {
+    @Transactional(readOnly = true)
+    public List<HabitLogResponse> getTodayHabitLogs(Long userId) {
 
-        HabitLog habitLog = findHabitLog(id);
+        userHelper.findActiveUser(userId);
 
-        HabitLogResponse response = mapper.map(habitLog, HabitLogResponse.class);
-        response.setHabitId(habitLog.getHabit().getId());
-
-        return response;
-    }
-
-    @Override
-    public List<HabitLogResponse> getHabitLogsByHabit(Long habitId) {
-
-        return habitLogRepository.findByHabitId(habitId)
+        return habitLogRepository
+                .findByHabitUserIdAndDate(userId, LocalDate.now())
                 .stream()
-                .map(log -> {
-                    HabitLogResponse response = mapper.map(log, HabitLogResponse.class);
-                    response.setHabitId(log.getHabit().getId());
-                    return response;
-                })
+                .map(this::mapToResponse)
                 .toList();
     }
 
     @Override
-    public List<HabitLogResponse> getHabitLogsByDate(LocalDate date) {
+    @Transactional(readOnly = true)
 
-        return habitLogRepository.findByDate(date)
+    public List<HabitLogResponse> getHabitLogsByHabit(
+            Long userId,
+            Long habitId) {
+
+        User user = userHelper.findActiveUser(userId);
+
+        Habit habit = habitRepository
+                .findByIdAndUserIdAndIsActiveTrue(
+                        habitId,
+                        user.getId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Habit not found."));
+
+        return habitLogRepository
+                .findByHabitId(habit.getId())
                 .stream()
-                .map(log -> {
-                    HabitLogResponse response = mapper.map(log, HabitLogResponse.class);
-                    response.setHabitId(log.getHabit().getId());
-                    return response;
-                })
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<HabitLogResponse> getHabitLogsBetweenDates(
+            Long userId,
+            LocalDate start,
+            LocalDate end) {
+
+        userHelper.findActiveUser(userId);
+
+        return habitLogRepository
+                .findByHabitUserIdAndDateBetween(userId, start, end)
+                .stream()
+                .map(this::mapToResponse)
                 .toList();
     }
 
     /**
-     * Returns a HabitLog by id or throws ResourceNotFoundException.
+     * Converts HabitLog entity to HabitLogResponse DTO.
      */
-    private HabitLog findHabitLog(Long id) {
+    private HabitLogResponse mapToResponse(HabitLog habitLog) {
 
-        return habitLogRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Habit log not found."));
+        HabitLogResponse response =
+                mapper.map(habitLog, HabitLogResponse.class);
+
+        response.setHabitId(habitLog.getHabit().getId());
+
+        return response;
     }
 
 }

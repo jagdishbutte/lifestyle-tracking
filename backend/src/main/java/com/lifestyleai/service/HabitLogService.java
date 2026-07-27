@@ -8,12 +8,15 @@ import com.lifestyleai.dto.habit.HabitLogResponse;
 
 public interface HabitLogService {
 
-    HabitLogResponse markHabit(HabitLogRequest request);
+	HabitLogResponse updateHabitCompletion(HabitLogRequest request);
 
-    HabitLogResponse getHabitLogById(Long id);
+	List<HabitLogResponse> getTodayHabitLogs(Long userId);
 
-    List<HabitLogResponse> getHabitLogsByHabit(Long habitId);
+	List<HabitLogResponse> getHabitLogsByHabit(Long userId, Long habitId);
 
-    List<HabitLogResponse> getHabitLogsByDate(LocalDate date);
+	List<HabitLogResponse> getHabitLogsBetweenDates(
+	        Long userId,
+	        LocalDate start,
+	        LocalDate end);
 
 }

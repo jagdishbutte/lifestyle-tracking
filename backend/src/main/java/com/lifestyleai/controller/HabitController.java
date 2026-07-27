@@ -42,45 +42,10 @@ public class HabitController {
 
     /**
      * Method   : GET
-     * API      : /api/habits/{id}
-     * Function : Returns a habit by its ID.
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<HabitResponse>> getHabitById(
-            @PathVariable Long id) {
-
-        HabitResponse response = habitService.getHabitById(id);
-
-        return ResponseEntity.ok(
-                new ApiResponse<>(
-                        true,
-                        "Habit retrieved successfully.",
-                        response));
-    }
-
-    /**
-     * Method   : GET
-     * API      : /api/habits
-     * Function : Returns all habits.
-     */
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<HabitResponse>>> getAllHabits() {
-
-        List<HabitResponse> response = habitService.getAllHabits();
-
-        return ResponseEntity.ok(
-                new ApiResponse<>(
-                        true,
-                        "Habits retrieved successfully.",
-                        response));
-    }
-
-    /**
-     * Method   : GET
-     * API      : /api/habits/user/{userId}
+     * API      : /api/habits/user/{userId}/active
      * Function : Returns all active habits of a user.
      */
-    @GetMapping("/user/{userId}")
+    @GetMapping("/user/{userId}/active")
     public ResponseEntity<ApiResponse<List<HabitResponse>>> getHabitsByUser(
             @PathVariable Long userId) {
 

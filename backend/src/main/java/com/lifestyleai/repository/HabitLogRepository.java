@@ -31,4 +31,10 @@ public interface HabitLogRepository extends JpaRepository<HabitLog, Long> {
     		""")
     		Long countCompletedHabits(Long userId, LocalDate date);
     
+
+    List<HabitLog> findByHabitUserIdAndDateBetween(
+            Long userId,
+            LocalDate start,
+            LocalDate end);
+    
 }
