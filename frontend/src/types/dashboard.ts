@@ -1,11 +1,26 @@
-import { type LucideIcon } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+export interface DashboardSummary {
+    sleepHours: number;
+    sleepGoalHours: number;
+
+    waterGlasses: number;
+    waterGoalGlasses: number;
+
+    caloriesConsumed: number;
+    dailyCalorieGoal: number;
+
+    completedHabits: number;
+    totalHabits: number;
+}
 
 export interface StatCardProps {
     title: string;
-    value: string;
-    description?: string;
+    current: number;
+    target: number;
+    unit?: string;
     icon: LucideIcon;
-    color?: "teal" | "green" | "amber";
+    color: "teal" | "green" | "amber";
 }
 
 export interface CheckInData {

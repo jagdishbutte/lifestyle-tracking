@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { todayHabits } from "../../data/dashboard";
-import type { Habit } from "../../types/dashboard.types";
+import type { Habit } from "../../types/dashboard";
 
 const HabitTrackerCard = () => {
     const [habits, setHabits] =

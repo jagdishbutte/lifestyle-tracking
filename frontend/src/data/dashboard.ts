@@ -1,44 +1,47 @@
-import {
-    Activity,
-    CircleDollarSign,
-    Target,
-    Moon,
-} from "lucide-react";
-import type { CheckInData } from "../types/dashboard.types";
+import type { CheckInData } from "../types/dashboard";
 
-export const dashboardStats = [
-    {
-        title: "Steps Today",
-        value: "6,542",
-        description: "+12% from yesterday",
-        icon: Activity,
-        color: "teal",
-    },
+// import {
+//     Moon,
+//     Droplets,
+//     Flame,
+//     CheckCircle2,
+// } from "lucide-react";
 
-    {
-        title: "Sleep",
-        value: "7.5 hrs",
-        description: "Good quality sleep",
-        icon: Moon,
-        color: "green",
-    },
+// export const dashboardStats = [
 
-    {
-        title: "Expenses",
-        value: "₹1,250",
-        description: "Today's spending",
-        icon: CircleDollarSign,
-        color: "amber",
-    },
+//     {
+//         title: "Sleep",
+//         value: "7.5 / 8 hrs",
+//         description: "Daily sleep goal",
+//         icon: Moon,
+//         color: "teal",
+//     },
 
-    {
-        title: "Goals",
-        value: "4/5",
-        description: "Completed today",
-        icon: Target,
-        color: "teal",
-    },
-];
+//     {
+//         title: "Water",
+//         value: "6 / 8 glasses",
+//         description: "Today's hydration",
+//         icon: Droplets,
+//         color: "green",
+//     },
+
+//     {
+//         title: "Calories",
+//         value: "1850 / 2200 kcal",
+//         description: "Today's calorie intake",
+//         icon: Flame,
+//         color: "amber",
+//     },
+
+//     {
+//         title: "Habits",
+//         value: "5 / 7",
+//         description: "Completed today",
+//         icon: CheckCircle2,
+//         color: "teal",
+//     },
+
+// ];
 
 export const todayCheckIn: CheckInData = {
     sleepHours: 7.5,
