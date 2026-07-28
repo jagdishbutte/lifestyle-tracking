@@ -9,11 +9,8 @@ import lombok.Setter;
 @Setter
 public class UpdateDietEntryRequest {
 
-    @NotNull
-    private Long foodId;
-
-    @NotNull
-    @DecimalMin(value = "0.1")
-    private Double quantity;
+	@NotNull
+	@DecimalMin(value = "0.1")
+	private Double quantity;
 
 }

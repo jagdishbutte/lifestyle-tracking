@@ -3,9 +3,11 @@ package com.lifestyleai.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import com.lifestyleai.dto.common.ApiResponse;
 import com.lifestyleai.dto.food.FoodRequest;
 import com.lifestyleai.dto.food.FoodResponse;
 import com.lifestyleai.service.FoodService;
@@ -28,10 +30,16 @@ public class FoodController {
      * Function : Adds a new food item.
      */
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public FoodResponse addFood(@Valid @RequestBody FoodRequest request) {
+    public ResponseEntity<ApiResponse<FoodResponse>> addFood(
+            @Valid @RequestBody FoodRequest request) {
 
-        return foodService.addFood(request);
+        FoodResponse response = foodService.addFood(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(
+                        true,
+                        "Food added successfully.",
+                        response));
     }
 
     /**
@@ -40,9 +48,16 @@ public class FoodController {
      * Function : Returns food details by ID.
      */
     @GetMapping("/{id}")
-    public FoodResponse getFoodById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<FoodResponse>> getFoodById(
+            @PathVariable Long id) {
 
-        return foodService.getFoodById(id);
+        FoodResponse response = foodService.getFoodById(id);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Food retrieved successfully.",
+                        response));
     }
 
     /**
@@ -51,9 +66,15 @@ public class FoodController {
      * Function : Returns all active food items.
      */
     @GetMapping
-    public List<FoodResponse> getAllFoods() {
+    public ResponseEntity<ApiResponse<List<FoodResponse>>> getAllFoods() {
 
-        return foodService.getAllFoods();
+        List<FoodResponse> response = foodService.getAllFoods();
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Foods retrieved successfully.",
+                        response));
     }
 
     /**
@@ -62,10 +83,16 @@ public class FoodController {
      * Function : Searches food items by keyword.
      */
     @GetMapping("/search")
-    public List<FoodResponse> searchFoods(
+    public ResponseEntity<ApiResponse<List<FoodResponse>>> searchFoods(
             @RequestParam(defaultValue = "") String keyword) {
 
-        return foodService.searchFoods(keyword);
+        List<FoodResponse> response = foodService.searchFoods(keyword);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Search completed successfully.",
+                        response));
     }
 
     /**
@@ -74,11 +101,17 @@ public class FoodController {
      * Function : Updates an existing food item.
      */
     @PutMapping("/{id}")
-    public FoodResponse updateFood(
+    public ResponseEntity<ApiResponse<FoodResponse>> updateFood(
             @PathVariable Long id,
             @Valid @RequestBody FoodRequest request) {
 
-        return foodService.updateFood(id, request);
+        FoodResponse response = foodService.updateFood(id, request);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Food updated successfully.",
+                        response));
     }
 
     /**
@@ -87,10 +120,16 @@ public class FoodController {
      * Function : Soft deletes a food item.
      */
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteFood(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> deleteFood(
+            @PathVariable Long id) {
 
         foodService.deleteFood(id);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Food deleted successfully.",
+                        null));
     }
 
 }

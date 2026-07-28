@@ -21,6 +21,9 @@ public class DailyDietResponse {
     private Double totalFat;
 
     private Double totalFiber;
+    
+//    include this later
+//    private Integer dailyCalorieGoal;
 
     private List<MealResponse> mealSummaries;
 

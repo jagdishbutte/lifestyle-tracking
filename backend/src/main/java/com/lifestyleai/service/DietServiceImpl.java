@@ -58,11 +58,7 @@ public class DietServiceImpl implements DietService {
 
             entry.setQuantityConsumed(item.getQuantity());
 
-            entry.setConsumedCalories(food.getCaloriesPerServing() * item.getQuantity());
-            entry.setConsumedProtein(food.getProteinPerServing() * item.getQuantity());
-            entry.setConsumedCarbs(food.getCarbsPerServing() * item.getQuantity());
-            entry.setConsumedFat(food.getFatPerServing() * item.getQuantity());
-            entry.setConsumedFiber(food.getFiberPerServing() * item.getQuantity());
+            calculateNutrition(entry);
 
             entries.add(entry);
         }
@@ -97,16 +93,11 @@ public class DietServiceImpl implements DietService {
 
         DietEntry entry = findDietEntry(dietEntryId);
 
-        Food food = findFood(request.getFoodId());
+        Food food = entry.getFood();
 
         entry.setFood(food);
         entry.setQuantityConsumed(request.getQuantity());
-
-        entry.setConsumedCalories(food.getCaloriesPerServing() * request.getQuantity());
-        entry.setConsumedProtein(food.getProteinPerServing() * request.getQuantity());
-        entry.setConsumedCarbs(food.getCarbsPerServing() * request.getQuantity());
-        entry.setConsumedFat(food.getFatPerServing() * request.getQuantity());
-        entry.setConsumedFiber(food.getFiberPerServing() * request.getQuantity());
+        calculateNutrition(entry);
 
         DietEntry updated = dietEntryRepository.save(entry);
 
@@ -229,6 +220,18 @@ public class DietServiceImpl implements DietService {
         response.setTotalFiber(totalFiber);
 
         return response;
+    }
+    
+    private void calculateNutrition(DietEntry entry) {
+
+        Food food = entry.getFood();
+        double quantity = entry.getQuantityConsumed();
+
+        entry.setConsumedCalories(food.getCaloriesPerServing() * quantity);
+        entry.setConsumedProtein(food.getProteinPerServing() * quantity);
+        entry.setConsumedCarbs(food.getCarbsPerServing() * quantity);
+        entry.setConsumedFat(food.getFatPerServing() * quantity);
+        entry.setConsumedFiber(food.getFiberPerServing() * quantity);
     }
 
 }

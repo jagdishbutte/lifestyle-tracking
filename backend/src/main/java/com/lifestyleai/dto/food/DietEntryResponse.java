@@ -3,6 +3,7 @@ package com.lifestyleai.dto.food;
 import java.time.LocalDate;
 
 import com.lifestyleai.enums.food.MealType;
+//import com.lifestyleai.enums.food.ServingUnit;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,4 +31,8 @@ public class DietEntryResponse {
     private Double consumedFiber;
 
     private LocalDate consumedDate;
+    
+//    include later
+//    private Double servingQuantity;
+//    private ServingUnit servingUnit;
 }
