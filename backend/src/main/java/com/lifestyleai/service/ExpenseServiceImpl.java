@@ -1,16 +1,22 @@
 package com.lifestyleai.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.lifestyleai.dto.expense.DailyExpenseResponse;
 import com.lifestyleai.dto.expense.ExpenseRequest;
 import com.lifestyleai.dto.expense.ExpenseResponse;
 import com.lifestyleai.entity.Expense;
 import com.lifestyleai.entity.User;
+import com.lifestyleai.exception.BadRequestException;
 import com.lifestyleai.exception.ResourceNotFoundException;
 import com.lifestyleai.repository.ExpenseRepository;
 import com.lifestyleai.service.common.UserHelper;
@@ -51,30 +57,6 @@ public class ExpenseServiceImpl implements ExpenseService {
 	}
 
 	@Override
-	public ExpenseResponse getExpenseById(Long id) {
-
-	    Expense expense = findExpenseById(id);
-
-	    ExpenseResponse response = mapper.map(expense, ExpenseResponse.class);
-	    response.setUserId(expense.getUser().getId());
-
-	    return response;
-	}
-
-	@Override
-	public List<ExpenseResponse> getAllExpenses() {
-
-	    return expenseRepository.findAll()
-	            .stream()
-	            .map(expense -> {
-	                ExpenseResponse response = mapper.map(expense, ExpenseResponse.class);
-	                response.setUserId(expense.getUser().getId());
-	                return response;
-	            })
-	            .toList();
-	}
-
-	@Override
 	public ExpenseResponse updateExpense(Long id, ExpenseRequest request) {
 
 		Expense expense = findExpenseById(id);
@@ -100,24 +82,104 @@ public class ExpenseServiceImpl implements ExpenseService {
 		
 	    expenseRepository.delete(expense);
 	}
-
+	
 	@Override
-	public List<ExpenseResponse> getExpensesByDate(LocalDate expenseDate) {
+	public DailyExpenseResponse getTodayExpenses(
+	        Long userId) {
 
-	    return expenseRepository.findByExpenseDate(expenseDate)
+	    return buildDailyExpenseResponse(
+	            expenseRepository.findByUserIdAndExpenseDate(
+	                    userId,
+	                    LocalDate.now()),
+	            LocalDate.now());
+	}
+	
+	@Override
+	public List<DailyExpenseResponse> getExpenseHistory(
+	        Long userId,
+	        Integer days) {
+
+	    userHelper.findActiveUser(userId);
+
+	    if (!List.of(7, 30, 90, 365).contains(days)) {
+	        throw new BadRequestException("Invalid history period.");
+	    }
+
+	    LocalDate endDate = LocalDate.now();
+
+	    LocalDate startDate =
+	            endDate.minusDays(days - 1);
+
+	    List<Expense> expenses =
+	            expenseRepository
+	                    .findByUserIdAndExpenseDateBetweenOrderByExpenseDateDesc(
+	                            userId,
+	                            startDate,
+	                            endDate);
+
+	    Map<LocalDate, List<Expense>> grouped =
+	            expenses.stream()
+	                    .collect(Collectors.groupingBy(
+	                            Expense::getExpenseDate,
+	                            LinkedHashMap::new,
+	                            Collectors.toList()));
+
+	    return grouped.entrySet()
 	            .stream()
-	            .map(expense -> {
-	                ExpenseResponse response = mapper.map(expense, ExpenseResponse.class);
-	                response.setUserId(expense.getUser().getId());
-	                return response;
-	            })
+	            .map(entry ->
+	                    buildDailyExpenseResponse(
+	                            entry.getValue(),
+	                            entry.getKey()))
 	            .toList();
 	}
 	
-	// Helper Methods
+	
+	 /* ==========================================================
+    	Helper Methods
+		========================================================== */
+	
 	private Expense findExpenseById(Long id) {
 	    return expenseRepository.findById(id)
 	    		.orElseThrow(() -> new ResourceNotFoundException("Expense not found."));
 	}
+	
+	private DailyExpenseResponse buildDailyExpenseResponse(
+	        List<Expense> expenses,
+	        LocalDate date) {
 
+	    DailyExpenseResponse response =
+	            new DailyExpenseResponse();
+
+	    response.setDate(date);
+
+	    List<ExpenseResponse> expenseResponses =
+	            expenses.stream()
+	                    .map(expense -> {
+
+	                        ExpenseResponse dto =
+	                                mapper.map(
+	                                        expense,
+	                                        ExpenseResponse.class);
+
+	                        dto.setUserId(
+	                                expense.getUser().getId());
+
+	                        return dto;
+
+	                    })
+	                    .toList();
+
+	    response.setExpenses(expenseResponses);
+
+	    BigDecimal totalAmount =
+	            expenses.stream()
+	                    .map(Expense::getAmount)
+	                    .reduce(
+	                            BigDecimal.ZERO,
+	                            BigDecimal::add);
+
+	    response.setTotalAmount(totalAmount);
+
+	    return response;
+	}
 }
