@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import toast from "react-hot-toast";
 
 import type {
@@ -14,12 +14,15 @@ import { getErrorMessage } from "../../utils/errorHandler";
 import ExpenseFormModal from "../expenses/ExpenseFormModal";
 import ConfirmModal from "../common/ConfirmModal";
 import { useNavigate } from "react-router-dom";
+import ExpenseCard from "../expenses/ExpenseCard";
 
 const userId = 6;
 
 const QuickExpenseCard = () => {
-    const [todayExpenses, setTodayExpenses] = useState<DailyExpenseResponse | null>(null);
-    const [editingExpense, setEditingExpense] = useState<ExpenseResponse | null>(null);
+    const [todayExpenses, setTodayExpenses] =
+        useState<DailyExpenseResponse | null>(null);
+    const [editingExpense, setEditingExpense] =
+        useState<ExpenseResponse | null>(null);
     const [showModal, setShowModal] = useState(false);
     const [deleteId, setDeleteId] = useState<number | null>(null);
     const [deleteLoading, setDeleteLoading] = useState(false);
@@ -97,43 +100,15 @@ const QuickExpenseCard = () => {
                 <div className="mt-6 max-h-96 space-y-3 overflow-y-auto pr-2">
                     {todayExpenses?.expenses.length ? (
                         todayExpenses.expenses.map((expense) => (
-                            <div
+                            <ExpenseCard
                                 key={expense.id}
-                                className="flex items-center justify-between rounded-xl border border-slate-200 p-4"
-                            >
-                                <div>
-                                    <h3 className="font-medium">
-                                        {expense.expenseName}
-                                    </h3>
-
-                                    <p className="text-sm text-slate-500">
-                                        {expense.category}
-                                    </p>
-                                </div>
-
-                                <div className="flex items-center gap-4">
-                                    <span className="font-semibold text-teal-600">
-                                        {formatCurrency(expense.amount)}
-                                    </span>
-
-                                    <button
-                                        onClick={() => {
-                                            setEditingExpense(expense);
-                                            setShowModal(true);
-                                        }}
-                                        className="text-slate-500 hover:text-teal-600"
-                                    >
-                                        <Pencil size={18} />
-                                    </button>
-
-                                    <button
-                                        onClick={() => setDeleteId(expense.id)}
-                                        className="text-slate-500 hover:text-red-600"
-                                    >
-                                        <Trash2 size={18} />
-                                    </button>
-                                </div>
-                            </div>
+                                expense={expense}
+                                onEdit={(expense) => {
+                                    setEditingExpense(expense);
+                                    setShowModal(true);
+                                }}
+                                onDelete={(id) => setDeleteId(id)}
+                            />
                         ))
                     ) : (
                         <p className="py-8 text-center text-slate-500">

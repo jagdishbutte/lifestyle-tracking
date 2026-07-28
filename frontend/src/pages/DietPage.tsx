@@ -216,7 +216,7 @@ const DietPage = () => {
                 <div className="grid gap-6 xl:grid-cols-2">
                     {/* Today's Diet */}
 
-                    <div className="flex h-[calc(100vh-290px)] flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
+                    <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
                         <div className="border-b border-slate-200 p-5">
                             <h2 className="text-xl font-semibold">
                                 Today's Diet
@@ -227,7 +227,7 @@ const DietPage = () => {
                             </p>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto p-5">
+                        <div className="max-h-[55vh] overflow-y-auto p-5">
                             {/* MealSection Components */}
 
                             <div className="space-y-5">
@@ -254,7 +254,7 @@ const DietPage = () => {
 
                     {/* History */}
 
-                    <div className="flex h-[calc(100vh-290px)] flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
+                    <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
                         <div className="border-b border-slate-200 p-5">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-xl font-semibold">
@@ -284,7 +284,7 @@ const DietPage = () => {
                             />
                         </div>
 
-                        <div className="flex-1 overflow-y-auto p-5">
+                        <div className="max-h-[55vh] overflow-y-auto p-5">
                             {/* HistoryCard Components */}
 
                             <HistorySection
