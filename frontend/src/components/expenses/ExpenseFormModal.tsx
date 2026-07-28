@@ -91,7 +91,9 @@ const ExpenseFormModal = ({
             amount: Number(amount),
             category,
             description,
-            expenseDate: new Date().toISOString().split("T")[0],
+            expenseDate: new Date().toLocaleDateString("en-CA", {
+                timeZone: "Asia/Kolkata",
+            }),
         };
 
         try {

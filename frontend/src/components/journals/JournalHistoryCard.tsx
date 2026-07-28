@@ -19,7 +19,13 @@ const JournalHistoryCard = ({
     onEditJournal,
     onDeleteJournal,
 }: JournalHistoryCardProps) => {
-    const [expanded, setExpanded] = useState(false);
+    const today = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Kolkata",
+    }).format(new Date());
+
+    const [expanded, setExpanded] = useState(
+        day.date === today,
+    );
 
     return (
         <div className="rounded-2xl border border-slate-200 bg-white">

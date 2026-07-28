@@ -1,4 +1,4 @@
-import { type Profile } from "../types/profile.types";
+import { type Profile } from "../types/profile";
 
 export const initialProfile: Profile = {
     name: "Jagdish",

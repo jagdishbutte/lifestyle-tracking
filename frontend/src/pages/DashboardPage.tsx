@@ -15,10 +15,12 @@ import { getDashboardSummary } from "../services/dashboardService";
 import { getErrorMessage } from "../utils/errorHandler";
 
 import type { DashboardSummary, StatCardProps } from "../types/dashboard";
+import { getProfile } from "../services/profileService";
+import type { UserResponse } from "../types/profile";
 
 const DashboardPage = () => {
     const userId = 6; // Replace after authentication
-
+    const [user, setUser] = useState<UserResponse | null>(null);
     const [summary, setSummary] = useState<DashboardSummary>({
         sleepHours: 0,
         sleepGoalHours: 8,
@@ -46,6 +48,12 @@ const DashboardPage = () => {
             }
         };
         loadDashboard();
+    }, []);
+
+    useEffect(() => {
+        getProfile(userId).then((response) => {
+            setUser(response.data);
+        });
     }, []);
 
     const stats: StatCardProps[] = [
@@ -87,7 +95,9 @@ const DashboardPage = () => {
             <div>
                 <h1 className="text-3xl font-bold">Dashboard</h1>
 
-                <p className="mt-2 text-slate-600">Welcome back, Jagdish.</p>
+                <p className="mt-2 text-slate-600">
+                    Welcome back, {user?.firstName}
+                </p>
 
                 <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
                     {stats.map((stat) => (

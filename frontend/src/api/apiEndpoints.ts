@@ -45,3 +45,7 @@ export const JOURNAL_API = {
     HISTORY: "/api/journals/user",
     BASE: "/api/journals",
 };
+
+export const PROFILE_API = {
+    BASE: "/api/users",
+};
