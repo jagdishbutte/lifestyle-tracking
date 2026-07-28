@@ -35,6 +35,7 @@ export const FOOD_API = {
 };
 
 export const EXPENSE_API = {
-    CREATE: "/api/expenses",
-    ALL: "/api/expenses",
+    TODAY: "/api/expenses/user",
+    HISTORY: "/api/expenses/user",
+    BASE: "/api/expenses",
 };

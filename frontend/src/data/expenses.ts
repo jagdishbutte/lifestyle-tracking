@@ -1,4 +1,4 @@
-import { type Expense } from "../types/expense.types";
+import { type Expense } from "../types/expense";
 
 export const initialExpenses: Expense[] = [
     {
