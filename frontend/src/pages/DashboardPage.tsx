@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 import AppShell from "../components/common/AppShell";
 import AiInsightCard from "../components/dashboard/AiInsightCard";
-import FitnessQuickLogCard from "../components/dashboard/FitnessQuickLogCard";
+import QuickDietLogCard from "../components/dashboard/QuickDietLogCard";
 import HabitTrackerCard from "../components/dashboard/HabitTrackerCard";
 import QuickCheckInCard from "../components/dashboard/QuickCheckInCard";
 import QuickExpenseCard from "../components/dashboard/QuickExpenseCard";
@@ -100,7 +100,7 @@ const DashboardPage = () => {
                     <HabitTrackerCard />
 
                     <QuickExpenseCard />
-                    <FitnessQuickLogCard />
+                    <QuickDietLogCard />
 
                     <QuickJournalCard />
                     <AiInsightCard />

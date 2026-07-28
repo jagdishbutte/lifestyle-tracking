@@ -23,21 +23,13 @@ const HabitTrackerCard = () => {
                     getTodayHabitLogs(userId),
                 ]);
 
-                console.log(habitLogsResponse);
-
                 if (habitsResponse.success && habitLogsResponse.success) {
-                    // console.log("Habit Logs Response:", habitLogsResponse);
-                    // console.log("Data:", habitLogsResponse.data);
-                    // console.log(
-                    //     "Is Array:",
-                    //     Array.isArray(habitLogsResponse.data),
-                    // );
                     const completedHabitIds = new Set(
                         habitLogsResponse.data
                             .filter((log) => log.completed)
                             .map((log) => log.habitId),
                     );
-                    console.log(completedHabitIds);
+
                     const mergedHabits: HabitItem[] = habitsResponse.data.map(
                         (habit) => ({
                             ...habit,
@@ -122,7 +114,7 @@ const HabitTrackerCard = () => {
 
             <div className="mt-6 max-h-80 space-y-3 overflow-y-auto pr-2">
                 {habits.map((habit) => (
-                    <button
+                    <div
                         key={habit.id}
                         className="flex w-full items-center justify-between rounded-xl border border-slate-200 px-4 py-3 hover:bg-slate-50"
                     >
@@ -155,7 +147,7 @@ const HabitTrackerCard = () => {
                                 </span>
                             )}
                         </button>
-                    </button>
+                    </div>
                 ))}
             </div>
         </div>

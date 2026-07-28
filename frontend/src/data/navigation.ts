@@ -27,8 +27,8 @@ export const navigationGroups: NavigationGroup[] = [
                 path: "/habits",
             },
             {
-                label: "Goals",
-                path: "/goals",
+                label: "Diet",
+                path: "/diet",
             },
         ],
     },

@@ -23,6 +23,16 @@ export const HABIT_LOG_API = {
     HISTORY: "/api/habit-logs/user",
 };
 
+export const DIET_API = {
+    BASE: "/api/diet",
+    TODAY: "/api/diet/user",
+    ENTRY: "/api/diet/entry",
+};
+
+export const FOOD_API = {
+    SEARCH: "/api/foods/search",
+};
+
 export const EXPENSE_API = {
     CREATE: "/api/expenses",
     ALL: "/api/expenses",

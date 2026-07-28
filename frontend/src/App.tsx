@@ -6,7 +6,7 @@ import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import HabitsPage from "./pages/HabitsPage";
-import GoalsPage from "./pages/GoalsPage";
+import DietPage from "./pages/DietPage";
 import ExpensesPage from "./pages/ExpensesPage";
 import JournalPage from "./pages/JournalPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
@@ -28,7 +28,7 @@ function App() {
 
                 <Route path="/habits" element={<HabitsPage />} />
 
-                <Route path="/goals" element={<GoalsPage />} />
+                <Route path="/diet" element={<DietPage />} />
 
                 <Route path="/expenses" element={<ExpensesPage />} />
 

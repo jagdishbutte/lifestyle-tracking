@@ -9,6 +9,8 @@ import type { HabitResponse } from "../types/habit";
 import { getActiveHabits, deleteHabit } from "../services/habitService";
 import { getErrorMessage } from "../utils/errorHandler";
 import ConfirmModal from "../components/common/ConfirmModal";
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const HabitsPage = () => {
     const userId = 6;
@@ -20,6 +22,7 @@ const HabitsPage = () => {
     );
     const [deleteHabitId, setDeleteHabitId] = useState<number | null>(null);
     const [deleteLoading, setDeleteLoading] = useState(false);
+    const navigate = useNavigate();
 
     const loadHabits = async () => {
         try {
@@ -69,12 +72,21 @@ const HabitsPage = () => {
         <AppShell>
             <div>
                 <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-3xl font-bold">Habits</h1>
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => navigate("/dashboard")}
+                            className="rounded-lg border border-slate-200 p-2 transition hover:bg-slate-100"
+                        >
+                            <ArrowLeft size={20} />
+                        </button>
 
-                        <p className="mt-2 text-slate-600">
-                            Create and manage your daily habits.
-                        </p>
+                        <div>
+                            <h1 className="text-3xl font-bold">Habits</h1>
+
+                            <p className="mt-2 text-slate-600">
+                                Create and manage your daily habits.
+                            </p>
+                        </div>
                     </div>
 
                     <button

@@ -5,6 +5,7 @@ import {
     LayoutDashboard,
     NotebookPen,
     Target,
+    Salad,
     User,
     Settings,
 } from "lucide-react";
@@ -20,7 +21,7 @@ interface SidebarProps {
 const iconMap = {
     Dashboard: LayoutDashboard,
     Habits: Target,
-    Goals: Target,
+    Diet: Salad,
     Expenses: CircleDollarSign,
     Journal: NotebookPen,
     Analytics: ChartColumn,
