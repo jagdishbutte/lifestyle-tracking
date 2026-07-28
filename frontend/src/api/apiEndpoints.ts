@@ -27,6 +27,7 @@ export const DIET_API = {
     BASE: "/api/diet",
     TODAY: "/api/diet/user",
     ENTRY: "/api/diet/entry",
+    HISTORY: "/api/diet/user",
 };
 
 export const FOOD_API = {

@@ -8,13 +8,18 @@ import type {
     MealType,
 } from "../types/diet";
 import { useEffect, useState } from "react";
-import { deleteDietEntry, getTodayDiet } from "../services/dietService";
+import {
+    deleteDietEntry,
+    getDietHistory,
+    getTodayDiet,
+} from "../services/dietService";
 import { getErrorMessage } from "../utils/errorHandler";
 import toast from "react-hot-toast";
 import MealSection from "../components/diet/MealSection";
 import FoodSearchModal from "../components/diet/FoodSearchModal";
 import ConfirmModal from "../components/common/ConfirmModal";
 import UpdateQuantityModal from "../components/diet/UpdateQuantityModal";
+import HistorySection from "../components/diet/HistorySection";
 
 const meals: {
     title: string;
@@ -54,6 +59,11 @@ const DietPage = () => {
         null,
     );
     const [loading, setLoading] = useState(true);
+    const [history, setHistory] = useState<DailyDietResponse[]>([]);
+    const [historyLoading, setHistoryLoading] = useState(false);
+    const [period, setPeriod] = useState(7);
+    const [search, setSearch] = useState("");
+
     const totalCalories = todayDiet?.totalCalories ?? 0;
     const calorieGoal = todayDiet?.dailyCalorieGoal ?? 2200;
 
@@ -63,11 +73,11 @@ const DietPage = () => {
     );
 
     const progressColor =
-    progress < 50
-        ? "bg-amber-500"
-        : progress < 100
-          ? "bg-teal-500"
-          : "bg-green-500";
+        progress < 50
+            ? "bg-amber-500"
+            : progress < 100
+              ? "bg-teal-500"
+              : "bg-green-500";
 
     const loadTodayDiet = async () => {
         try {
@@ -85,9 +95,43 @@ const DietPage = () => {
         }
     };
 
+    const loadHistory = async () => {
+        try {
+            setHistoryLoading(true);
+
+            const response = await getDietHistory(userId, period);
+
+            if (response.success) {
+                setHistory(response.data);
+            }
+        } catch (error) {
+            toast.error(getErrorMessage(error));
+        } finally {
+            setHistoryLoading(false);
+        }
+    };
+
+    const filteredHistory = history.filter((day) => {
+        if (!search.trim()) return true;
+
+        const keyword = search.toLowerCase();
+
+        return day.mealSummaries.some(
+            (meal) =>
+                meal.mealType.toLowerCase().includes(keyword) ||
+                meal.entries.some((entry) =>
+                    entry.foodName.toLowerCase().includes(keyword),
+                ),
+        );
+    });
+
     useEffect(() => {
         loadTodayDiet();
     }, []);
+
+    useEffect(() => {
+        loadHistory();
+    }, [period]);
 
     const handleAddFood = (mealType: MealType) => {
         setSelectedMeal(mealType);
@@ -217,16 +261,24 @@ const DietPage = () => {
                                     History
                                 </h2>
 
-                                <select className="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none">
-                                    <option>Last 7 Days</option>
-                                    <option>Last Month</option>
-                                    <option>Last Quarter</option>
-                                    <option>Last Year</option>
+                                <select
+                                    value={period}
+                                    onChange={(e) =>
+                                        setPeriod(Number(e.target.value))
+                                    }
+                                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none"
+                                >
+                                    <option value={7}>Last 7 Days</option>
+                                    <option value={30}>Last Month</option>
+                                    <option value={90}>Last Quarter</option>
+                                    <option value={365}>Last Year</option>
                                 </select>
                             </div>
 
                             <input
                                 type="text"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
                                 placeholder="Search food..."
                                 className="mt-4 w-full rounded-xl border border-slate-300 px-4 py-3 focus:border-teal-500 focus:outline-none"
                             />
@@ -235,9 +287,11 @@ const DietPage = () => {
                         <div className="flex-1 overflow-y-auto p-5">
                             {/* HistoryCard Components */}
 
-                            <div className="rounded-xl border border-dashed border-slate-300 p-10 text-center text-slate-500">
-                                Previous diet history will appear here.
-                            </div>
+                            <HistorySection
+                                history={filteredHistory}
+                                onEditEntry={handleEditEntry}
+                                onDeleteEntry={confirmDelete}
+                            />
                         </div>
                     </div>
                 </div>

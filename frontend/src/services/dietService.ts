@@ -72,3 +72,21 @@ export const deleteDietEntry = async (
 
     return response.data;
 };
+
+export const getDietHistory = async (
+    userId: number,
+    days: number
+): Promise<ApiResponse<DailyDietResponse[]>> => {
+
+    const response =
+        await apiConnector<ApiResponse<DailyDietResponse[]>>(
+            "GET",
+            `${DIET_API.HISTORY}/${userId}/history`,
+            null,
+            {
+                days,
+            }
+        );
+
+    return response.data;
+};
