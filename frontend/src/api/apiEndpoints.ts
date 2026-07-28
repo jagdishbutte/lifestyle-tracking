@@ -39,3 +39,9 @@ export const EXPENSE_API = {
     HISTORY: "/api/expenses/user",
     BASE: "/api/expenses",
 };
+
+export const JOURNAL_API = {
+    TODAY: "/api/journals/user",
+    HISTORY: "/api/journals/user",
+    BASE: "/api/journals",
+};
