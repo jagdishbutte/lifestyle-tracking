@@ -1,6 +1,7 @@
 package com.lifestyleai.service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.lifestyleai.dto.food.AddMealRequest;
 import com.lifestyleai.dto.food.UpdateDietEntryRequest;
@@ -34,5 +35,13 @@ public interface DietService {
      * Deletes a single food entry.
      */
     void deleteDietEntry(Long dietEntryId);
+    
+    
+    /**
+     * Return diet entries in given date range
+     */
+    List<DailyDietResponse> getDietHistory(
+            Long userId,
+            Integer days);
 
 }

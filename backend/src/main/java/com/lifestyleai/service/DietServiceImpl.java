@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -107,6 +108,40 @@ public class DietServiceImpl implements DietService {
         response.setFoodName(updated.getFood().getName());
 
         return response;
+    }
+    
+    @Override
+    public List<DailyDietResponse> getDietHistory(
+            Long userId,
+            Integer days) {
+
+        userHelper.findActiveUser(userId);
+
+        LocalDate endDate = LocalDate.now();
+
+        LocalDate startDate = endDate.minusDays(days - 1);
+
+        List<DietEntry> entries =
+                dietEntryRepository
+                        .findByUserIdAndConsumedDateBetweenOrderByConsumedDateDesc(
+                                userId,
+                                startDate,
+                                endDate);
+
+        Map<LocalDate, List<DietEntry>> grouped =
+                entries.stream()
+                        .collect(Collectors.groupingBy(
+                                DietEntry::getConsumedDate,
+                                LinkedHashMap::new,
+                                Collectors.toList()));
+
+        return grouped.entrySet()
+                .stream()
+                .map(entry ->
+                        buildDailyResponse(
+                                entry.getValue(),
+                                entry.getKey()))
+                .toList();
     }
 
     @Override

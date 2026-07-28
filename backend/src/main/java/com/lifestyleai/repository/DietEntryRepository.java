@@ -27,4 +27,9 @@ public interface DietEntryRepository extends JpaRepository<DietEntry, Long> {
     		AND d.consumedDate = :date
     		""")
     		Double getTotalCaloriesByUserAndDate(Long userId, LocalDate date);
+    
+    List<DietEntry> findByUserIdAndConsumedDateBetweenOrderByConsumedDateDesc(
+            Long userId,
+            LocalDate startDate,
+            LocalDate endDate);
 }

@@ -1,6 +1,7 @@
 package com.lifestyleai.controller;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -120,6 +121,26 @@ public class DietController {
                         true,
                         "Diet entry deleted successfully.",
                         null));
+    }
+    
+    /**
+     * Method   : GET
+     * API      : /api/diet/user/{userId}/history?days=7
+     * Function : Returns diet history for the last N days.
+     */
+    @GetMapping("/user/{userId}/history")
+    public ResponseEntity<ApiResponse<List<DailyDietResponse>>> getDietHistory(
+            @PathVariable Long userId,
+            @RequestParam(defaultValue = "7") Integer days) {
+
+        List<DailyDietResponse> response =
+                dietService.getDietHistory(userId, days);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Diet history retrieved successfully.",
+                        response));
     }
 
 }
