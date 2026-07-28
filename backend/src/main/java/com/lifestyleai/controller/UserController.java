@@ -20,6 +20,11 @@ public class UserController {
 
     private final UserService userService;
 
+    /**
+     * Method   : GET
+     * API      : /api/users/{id}
+     * Function : Returns a user's profile by ID.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<UserResponse>> getUserById(
             @PathVariable Long id) {
@@ -35,6 +40,12 @@ public class UserController {
         );
     }
 
+    /**
+     * Method   : GET
+     * API      : /api/users
+     * Function : Returns all registered users.
+     * Note     : Intended for Admin Dashboard.
+     */
     @GetMapping
     public ResponseEntity<ApiResponse<List<UserResponse>>> getAllUsers() {
 
@@ -49,6 +60,11 @@ public class UserController {
         );
     }
 
+    /**
+     * Method   : PUT
+     * API      : /api/users/{id}/profile
+     * Function : Updates a user's profile information.
+     */
     @PutMapping("/{id}/profile")
     public ResponseEntity<ApiResponse<UserResponse>> updateProfile(
             @PathVariable Long id,
@@ -65,6 +81,11 @@ public class UserController {
         );
     }
 
+    /**
+     * Method   : PUT
+     * API      : /api/users/{id}/password
+     * Function : Updates a user's account password.
+     */
     @PutMapping("/{id}/password")
     public ResponseEntity<ApiResponse<String>> updatePassword(
             @PathVariable Long id,
@@ -81,6 +102,12 @@ public class UserController {
         );
     }
 
+    /**
+     * Method   : DELETE
+     * API      : /api/users/{id}
+     * Function : Deletes a user account.
+     * Note     : Intended for Admin Dashboard.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<String>> deleteUser(
             @PathVariable Long id) {
