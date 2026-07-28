@@ -1,15 +1,14 @@
 package com.lifestyleai.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.lifestyleai.dto.common.ApiResponse;
+import com.lifestyleai.dto.journal.DailyJournalResponse;
 import com.lifestyleai.dto.journal.JournalRequest;
 import com.lifestyleai.dto.journal.JournalResponse;
 import com.lifestyleai.service.JournalService;
@@ -21,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/journals")
 @RequiredArgsConstructor
 @Validated
+@CrossOrigin(origins = "http://localhost:5173")
 public class JournalController {
 
     private final JournalService journalService;
@@ -43,42 +43,7 @@ public class JournalController {
                         response));
     }
 
-    /**
-     * Method   : GET
-     * API      : /api/journals/{id}
-     * Function : Returns journal details by ID.
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<JournalResponse>> getJournalById(
-            @PathVariable Long id) {
-
-        JournalResponse response = journalService.getJournalById(id);
-
-        return ResponseEntity.ok(
-                new ApiResponse<>(
-                        true,
-                        "Journal fetched successfully.",
-                        response));
-    }
-
-    /**
-     * Method   : GET
-     * API      : /api/journals/user/{userId}
-     * Function : Returns all journals of a user.
-     */
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<ApiResponse<List<JournalResponse>>> getAllJournals(
-            @PathVariable Long userId) {
-
-        List<JournalResponse> response = journalService.getAllJournals(userId);
-
-        return ResponseEntity.ok(
-                new ApiResponse<>(
-                        true,
-                        "Journals fetched successfully.",
-                        response));
-    }
-
+    
     /**
      * Method   : PUT
      * API      : /api/journals/{id}
@@ -115,47 +80,45 @@ public class JournalController {
                         "Journal deleted successfully.",
                         null));
     }
-
+    
     /**
      * Method   : GET
-     * API      : /api/journals/user/{userId}/date/{date}
-     * Function : Returns all journals for a specific date.
+     * API      : /api/journals/user/{userId}/today
+     * Function : Returns today's journal entries.
      */
-    @GetMapping("/user/{userId}/date/{date}")
-    public ResponseEntity<ApiResponse<List<JournalResponse>>> getJournalsByDate(
-            @PathVariable Long userId,
-            @PathVariable
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate date) {
+    @GetMapping("/user/{userId}/today")
+    public ResponseEntity<ApiResponse<DailyJournalResponse>> getTodayJournals(
+            @PathVariable Long userId) {
 
-        List<JournalResponse> response =
-                journalService.getJournalsByDate(userId, date);
+        DailyJournalResponse response =
+                journalService.getTodayJournals(userId);
 
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         true,
-                        "Journals fetched successfully.",
+                        "Today's journals retrieved successfully.",
                         response));
     }
-
+    
     /**
      * Method   : GET
-     * API      : /api/journals/user/{userId}/search
-     * Function : Searches journals by title or content.
+     * API      : /api/journals/user/{userId}/history?days=7
+     * Function : Returns journal history for the last N days.
      */
-    @GetMapping("/user/{userId}/search")
-    public ResponseEntity<ApiResponse<List<JournalResponse>>> searchJournals(
+    @GetMapping("/user/{userId}/history")
+    public ResponseEntity<ApiResponse<List<DailyJournalResponse>>> getJournalHistory(
             @PathVariable Long userId,
-            @RequestParam String keyword) {
+            @RequestParam(defaultValue = "7") Integer days) {
 
-        List<JournalResponse> response =
-                journalService.searchJournals(userId, keyword);
+        List<DailyJournalResponse> response =
+                journalService.getJournalHistory(
+                        userId,
+                        days);
 
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         true,
-                        "Search completed successfully.",
+                        "Journal history retrieved successfully.",
                         response));
     }
-
 }

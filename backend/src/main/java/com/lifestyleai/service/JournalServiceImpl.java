@@ -2,17 +2,21 @@ package com.lifestyleai.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.lifestyleai.dto.journal.DailyJournalResponse;
 import com.lifestyleai.dto.journal.JournalRequest;
 import com.lifestyleai.dto.journal.JournalResponse;
 import com.lifestyleai.entity.Journal;
 import com.lifestyleai.entity.User;
+import com.lifestyleai.exception.BadRequestException;
 import com.lifestyleai.exception.ResourceNotFoundException;
 import com.lifestyleai.repository.JournalRepository;
 import com.lifestyleai.service.common.UserHelper;
@@ -25,13 +29,13 @@ import lombok.RequiredArgsConstructor;
 public class JournalServiceImpl implements JournalService {
 
     private final JournalRepository journalRepository;
-    private final UserHelper userLookupService;
+    private final UserHelper userHelper;
     private final ModelMapper mapper;
 
     @Override
     public JournalResponse addJournal(JournalRequest request) {
 
-        User user = userLookupService.findActiveUser(request.getUserId());
+        User user = userHelper.findActiveUser(request.getUserId());
 
         Journal journal = new Journal();
         journal.setTitle(request.getTitle());
@@ -45,30 +49,6 @@ public class JournalServiceImpl implements JournalService {
         response.setUserId(user.getId());
 
         return response;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public JournalResponse getJournalById(Long journalId) {
-
-        Journal journal = findJournal(journalId);
-
-        JournalResponse response = mapper.map(journal, JournalResponse.class);
-        response.setUserId(journal.getUser().getId());
-
-        return response;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<JournalResponse> getAllJournals(Long userId) {
-
-        userLookupService.findActiveUser(userId);
-
-        return journalRepository.findByUserIdOrderByCreatedAtDesc(userId)
-                .stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -92,38 +72,70 @@ public class JournalServiceImpl implements JournalService {
 
         journalRepository.delete(journal);
     }
-
+    
     @Override
-    @Transactional(readOnly = true)
-    public List<JournalResponse> getJournalsByDate(Long userId, LocalDate date) {
+    public DailyJournalResponse getTodayJournals(Long userId) {
 
-        userLookupService.findActiveUser(userId);
+        userHelper.findActiveUser(userId);
 
-        LocalDateTime start = date.atStartOfDay();
-        LocalDateTime end = date.plusDays(1).atStartOfDay();
+        LocalDate today = LocalDate.now();
 
-        return journalRepository
-                .findByUserIdAndCreatedAtBetweenOrderByCreatedAtDesc(
+        List<Journal> journals =
+                journalRepository.findByUserIdAndCreatedAtBetweenOrderByCreatedAtDesc(
                         userId,
-                        start,
-                        end)
-                .stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
+                        today.atStartOfDay(),
+                        today.plusDays(1).atStartOfDay());
 
+        return buildDailyJournalResponse(
+                journals,
+                today);
+    }
+    
     @Override
-    @Transactional(readOnly = true)
-    public List<JournalResponse> searchJournals(Long userId, String keyword) {
+    public List<DailyJournalResponse> getJournalHistory(
+            Long userId,
+            Integer days) {
 
-        userLookupService.findActiveUser(userId);
+        userHelper.findActiveUser(userId);
 
-        return journalRepository
-                .searchJournal(userId, keyword)
+        if (!List.of(7, 30, 90, 365).contains(days)) {
+            throw new BadRequestException("Invalid history period.");
+        }
+
+        LocalDate today = LocalDate.now();
+
+        LocalDateTime start =
+                today.minusDays(days - 1)
+                        .atStartOfDay();
+
+        LocalDateTime end =
+                today.plusDays(1)
+                        .atStartOfDay();
+
+        List<Journal> journals =
+                journalRepository
+                        .findByUserIdAndCreatedAtBetweenOrderByCreatedAtDesc(
+                                userId,
+                                start,
+                                end);
+
+        Map<LocalDate, List<Journal>> grouped =
+                journals.stream()
+                        .collect(Collectors.groupingBy(
+                                journal -> journal.getCreatedAt().toLocalDate(),
+                                LinkedHashMap::new,
+                                Collectors.toList()));
+
+        return grouped.entrySet()
                 .stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .map(entry ->
+                        buildDailyJournalResponse(
+                                entry.getValue(),
+                                entry.getKey()))
+                .toList();
     }
+    
+    
 
     /* ==========================================================
                         Helper Methods
@@ -141,6 +153,39 @@ public class JournalServiceImpl implements JournalService {
         JournalResponse response = mapper.map(journal, JournalResponse.class);
 
         response.setUserId(journal.getUser().getId());
+
+        return response;
+    }
+    
+    private DailyJournalResponse buildDailyJournalResponse(
+            List<Journal> journals,
+            LocalDate date) {
+
+        DailyJournalResponse response =
+                new DailyJournalResponse();
+
+        response.setDate(date);
+
+        response.setEntryCount(journals.size());
+
+        List<JournalResponse> journalResponses =
+                journals.stream()
+                        .map(journal -> {
+
+                            JournalResponse dto =
+                                    mapper.map(
+                                            journal,
+                                            JournalResponse.class);
+
+                            dto.setUserId(
+                                    journal.getUser().getId());
+
+                            return dto;
+
+                        })
+                        .toList();
+
+        response.setJournals(journalResponses);
 
         return response;
     }
