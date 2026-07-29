@@ -3,6 +3,8 @@ package com.lifestyleai.entity;
 import com.lifestyleai.enums.user.ActivityLevel;
 import com.lifestyleai.enums.user.CurrencyType;
 import com.lifestyleai.enums.user.Gender;
+import com.lifestyleai.enums.user.UserRole;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -66,5 +68,9 @@ public class User extends BaseEntity {
     
     @Column(nullable = false)
     private Boolean isActive = true;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role = UserRole.USER;
 
 }
