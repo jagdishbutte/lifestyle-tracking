@@ -13,8 +13,16 @@ import AnalyticsPage from "./pages/AnalyticsPage";
 import AiAssistantPage from "./pages/AiAssistantPage";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
+import { useAuthStore } from "./store/authStore";
+import { useEffect } from "react";
 
 function App() {
+    const initialize = useAuthStore((state) => state.initialize);
+
+    useEffect(() => {
+        initialize();
+    }, []);
+    
     return (
         <BrowserRouter>
             <Routes>
