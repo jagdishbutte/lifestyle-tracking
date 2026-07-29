@@ -28,7 +28,7 @@ public class HabitServiceImpl implements HabitService {
     @Override
     public HabitResponse addHabit(HabitRequest request) {
 
-    	User user = userHelper.findActiveUser(request.getUserId());
+    	User user = userHelper.getCurrentUser();
 
         Habit habit = new Habit();
 

@@ -12,9 +12,6 @@ import lombok.Setter;
 public class DailyCheckInRequest {
 
     @NotNull
-    private Long userId;
-
-    @NotNull
     @DecimalMin("0.0")
     private Double sleepHours;
 

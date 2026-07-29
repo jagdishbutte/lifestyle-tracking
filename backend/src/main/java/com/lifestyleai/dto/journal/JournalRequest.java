@@ -1,7 +1,6 @@
 package com.lifestyleai.dto.journal;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,9 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class JournalRequest {
-
-    @NotNull(message = "User ID is required.")
-    private Long userId;
 
     @NotBlank(message = "Title is required.")
     @Size(max = 150)

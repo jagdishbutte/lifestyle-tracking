@@ -16,9 +16,6 @@ import lombok.Setter;
 public class AddMealRequest {
 
     @NotNull
-    private Long userId;
-
-    @NotNull
     private MealType mealType;
 
     @NotNull

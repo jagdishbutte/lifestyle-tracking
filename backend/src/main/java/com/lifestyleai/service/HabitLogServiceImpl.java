@@ -32,7 +32,7 @@ public class HabitLogServiceImpl implements HabitLogService {
     @Override
     public HabitLogResponse updateHabitCompletion(HabitLogRequest request) {
 
-        User user = userHelper.findActiveUser(request.getUserId());
+    	User user = userHelper.getCurrentUser();
 
         Habit habit = habitRepository
                 .findByIdAndUserIdAndIsActiveTrue(

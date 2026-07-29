@@ -35,7 +35,7 @@ public class JournalServiceImpl implements JournalService {
     @Override
     public JournalResponse addJournal(JournalRequest request) {
 
-        User user = userHelper.findActiveUser(request.getUserId());
+        User user = userHelper.getCurrentUser();
 
         Journal journal = new Journal();
         journal.setTitle(request.getTitle());
@@ -96,7 +96,7 @@ public class JournalServiceImpl implements JournalService {
             Long userId,
             Integer days) {
 
-        userHelper.findActiveUser(userId);
+        // User user = userHelper.getCurrentUser();
 
         if (!List.of(7, 30, 90, 365).contains(days)) {
             throw new BadRequestException("Invalid history period.");

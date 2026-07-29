@@ -10,9 +10,6 @@ import lombok.Data;
 @Data
 public class HabitRequest {
 
-    @NotNull(message = "User ID is required")
-    private Long userId;
-
     @NotBlank(message = "Habit name is required")
     private String name;
 

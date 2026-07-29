@@ -35,7 +35,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 	@Override
 	public ExpenseResponse addExpense(ExpenseRequest request) {
 
-		User user = userHelper.findActiveUser(request.getUserId());
+		User user = userHelper.getCurrentUser();
 
 		Expense expense = new Expense();
 

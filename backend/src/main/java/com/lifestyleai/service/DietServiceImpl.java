@@ -42,7 +42,7 @@ public class DietServiceImpl implements DietService {
     @Override
     public DailyDietResponse addMeal(AddMealRequest request) {
 
-        User user = userHelper.findActiveUser(request.getUserId());
+    	User user = userHelper.getCurrentUser();
 
         List<DietEntry> entries = new ArrayList<>();
 
@@ -66,7 +66,7 @@ public class DietServiceImpl implements DietService {
 
         dietEntryRepository.saveAll(entries);
 
-        return getDietByDate(request.getUserId(),
+        return getDietByDate(userHelper.getCurrentUserId(),
                 request.getConsumedDate());
     }
 

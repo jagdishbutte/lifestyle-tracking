@@ -10,12 +10,6 @@ import lombok.Data;
 
 @Data
 public class ExpenseRequest {
-	
-//	Remove userId from ExpenseRequest
-//	Obtain the current user's ID from the security context (JWT)
-	
-	@NotNull(message = "User ID is required")
-    private Long userId;
 
     @NotBlank(message = "Expense name is required")
     private String expenseName;

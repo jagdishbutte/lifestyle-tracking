@@ -28,7 +28,7 @@ public class DailyCheckInServiceImpl implements DailyCheckInService {
     @Override
     public DailyCheckInResponse saveTodayCheckIn(DailyCheckInRequest request) {
 
-        User user = userHelper.findActiveUser(request.getUserId());
+    	User user = userHelper.getCurrentUser();
 
         LocalDate today = LocalDate.now();
 
