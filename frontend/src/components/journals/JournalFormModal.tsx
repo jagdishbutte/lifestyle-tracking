@@ -15,8 +15,6 @@ interface JournalFormModalProps {
     onSaved: () => void;
 }
 
-const userId = 6;
-
 const JournalFormModal = ({
     open,
     journal,
@@ -57,7 +55,6 @@ const JournalFormModal = ({
         }
 
         const request: JournalRequest = {
-            userId,
             title,
             content,
             favourite,

@@ -2,8 +2,6 @@ import { create } from "zustand";
 import { getProfile } from "../services/profileService";
 import type { UserResponse } from "../types/profile";
 
-const DEVELOPMENT_USER_ID = 1;
-
 interface UserState {
     user: UserResponse | null;
     loading: boolean;
@@ -23,7 +21,7 @@ export const useUserStore = create<UserState>((set) => ({
                 loading: true,
             });
 
-            const response = await getProfile(DEVELOPMENT_USER_ID);
+            const response = await getProfile();
 
             if (response.success) {
                 set({

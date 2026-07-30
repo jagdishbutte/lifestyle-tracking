@@ -41,8 +41,6 @@ const categoryLabels = {
     OTHER: "Other",
 };
 
-const userId = 6;
-
 const ExpenseFormModal = ({
     open,
     expense,
@@ -86,7 +84,6 @@ const ExpenseFormModal = ({
         }
 
         const request: ExpenseRequest = {
-            userId,
             expenseName,
             amount: Number(amount),
             category,

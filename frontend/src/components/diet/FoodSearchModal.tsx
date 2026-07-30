@@ -18,7 +18,6 @@ const FoodSearchModal = ({
 }: FoodSearchModalProps) => {
     if (!mealType) return null;
 
-    const userId = 6;
     const [search, setSearch] = useState("");
     const [foods, setFoods] = useState<FoodResponse[]>([]);
     const [selectedFood, setSelectedFood] = useState<FoodResponse | null>(null);
@@ -71,7 +70,6 @@ const FoodSearchModal = ({
             setSaving(true);
 
             const request: AddMealRequest = {
-                userId: userId,
                 mealType,
                 consumedDate,
                 items: [

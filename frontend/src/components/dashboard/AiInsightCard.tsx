@@ -25,7 +25,7 @@ const AiInsightCard = () => {
             </div>
 
             <div className="mt-6 space-y-4">
-                {insights.map((insight) => (
+                {insights.map((insight: any) => (
                     <div
                         key={insight.id}
                         className="rounded-xl border border-slate-100 bg-slate-50 p-4"

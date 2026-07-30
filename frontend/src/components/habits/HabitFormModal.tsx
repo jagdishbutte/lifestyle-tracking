@@ -24,8 +24,6 @@ const categories = [
 
 const frequencies = ["DAILY", "WEEKLY", "MONTHLY"] as const;
 
-const userId = 6;
-
 const HabitFormModal = ({
     open,
     habit,
@@ -33,7 +31,6 @@ const HabitFormModal = ({
     onSaved,
 }: HabitFormModalProps) => {
     const [formData, setFormData] = useState<HabitRequest>({
-        userId,
         name: "",
         category: "HEALTH",
         frequency: "DAILY",
@@ -42,14 +39,12 @@ const HabitFormModal = ({
     useEffect(() => {
         if (habit) {
             setFormData({
-                userId,
                 name: habit.name,
                 category: habit.category,
                 frequency: habit.frequency,
             });
         } else {
             setFormData({
-                userId,
                 name: "",
                 category: "HEALTH",
                 frequency: "DAILY",
