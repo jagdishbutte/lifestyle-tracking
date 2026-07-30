@@ -8,13 +8,13 @@ import type {
 } from "../types/auth";
 
 import type { ApiResponse } from "../types/common";
-import type { User } from "../types/user";
+import type { UserResponse } from "../types/profile";
 
 export const registerUser = async (
     request: RegisterRequest
-): Promise<ApiResponse<User>> => {
+): Promise<ApiResponse<UserResponse>> => {
 
-    const response = await apiConnector<ApiResponse<User>>(
+    const response = await apiConnector<ApiResponse<UserResponse>>(
         "POST",
         AUTH_API.REGISTER,
         request

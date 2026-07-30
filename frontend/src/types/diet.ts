@@ -23,7 +23,6 @@ export interface MealItemRequest {
 }
 
 export interface AddMealRequest {
-    userId: number;
     mealType: MealType;
     consumedDate: string;
     items: MealItemRequest[];

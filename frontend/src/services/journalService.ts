@@ -9,28 +9,25 @@ import type {
     JournalResponse,
 } from "../types/journal";
 
-export const getTodayJournals = async (
-    userId: number,
-): Promise<ApiResponse<DailyJournalResponse>> => {
+export const getTodayJournals = async (): Promise<ApiResponse<DailyJournalResponse>> => {
 
     const response =
         await apiConnector<ApiResponse<DailyJournalResponse>>(
             "GET",
-            `${JOURNAL_API.TODAY}/${userId}/today`,
+            `${JOURNAL_API.TODAY}/today`,
         );
 
     return response.data;
 };
 
 export const getJournalHistory = async (
-    userId: number,
     days: number,
 ): Promise<ApiResponse<DailyJournalResponse[]>> => {
 
     const response =
         await apiConnector<ApiResponse<DailyJournalResponse[]>>(
             "GET",
-            `${JOURNAL_API.HISTORY}/${userId}/history`,
+            `${JOURNAL_API.HISTORY}/history`,
             null,
             {
                 days,

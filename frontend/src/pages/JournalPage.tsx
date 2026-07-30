@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 
 import AppShell from "../components/common/AppShell";
 import ConfirmModal from "../components/common/ConfirmModal";
-
 import JournalFormModal from "../components/journals/JournalFormModal";
 import JournalCard from "../components/journals/JournalCard";
 import JournalHistorySection from "../components/journals/JournalHistorySection";
@@ -17,10 +16,7 @@ import {
 } from "../services/journalService";
 
 import type { DailyJournalResponse, JournalResponse } from "../types/journal";
-
 import { getErrorMessage } from "../utils/errorHandler";
-
-const userId = 6;
 
 const JournalPage = () => {
     const navigate = useNavigate();
@@ -37,7 +33,7 @@ const JournalPage = () => {
 
     const loadTodayJournals = async () => {
         try {
-            const response = await getTodayJournals(userId);
+            const response = await getTodayJournals();
 
             if (response.success) {
                 setTodayJournals(response.data);
@@ -49,7 +45,7 @@ const JournalPage = () => {
 
     const loadHistory = async () => {
         try {
-            const response = await getJournalHistory(userId, period);
+            const response = await getJournalHistory(period);
 
             if (response.success) {
                 setHistory(response.data);

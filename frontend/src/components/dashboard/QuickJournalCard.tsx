@@ -9,13 +9,10 @@ import type {
 } from "../../types/journal";
 
 import { deleteJournal, getTodayJournals } from "../../services/journalService";
-
 import { getErrorMessage } from "../../utils/errorHandler";
 import ConfirmModal from "../common/ConfirmModal";
 import JournalFormModal from "../journals/JournalFormModal";
 import JournalCard from '../journals/JournalCard';
-
-const userId = 6;
 
 const QuickJournalCard = () => {
     const navigate = useNavigate();
@@ -27,7 +24,7 @@ const QuickJournalCard = () => {
 
     const loadJournals = async () => {
         try {
-            const response = await getTodayJournals(userId);
+            const response = await getTodayJournals();
 
             if (response.success) {
                 setTodayJournals(response.data);

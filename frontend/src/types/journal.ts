@@ -1,7 +1,6 @@
 import type { ApiResponse } from "./common";
 
 export interface JournalRequest {
-    userId: number;
     title: string;
     content: string;
     favourite: boolean;

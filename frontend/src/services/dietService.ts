@@ -34,13 +34,11 @@ export const addMeal = async (
     return response.data;
 };
 
-export const getTodayDiet = async (
-    userId: number
-): Promise<ApiResponse<DailyDietResponse>> => {
+export const getTodayDiet = async (): Promise<ApiResponse<DailyDietResponse>> => {
 
     const response = await apiConnector<ApiResponse<DailyDietResponse>>(
         "GET",
-        `${DIET_API.TODAY}/${userId}/today`
+        `${DIET_API.TODAY}/today`
     );
 
     return response.data;
@@ -74,14 +72,13 @@ export const deleteDietEntry = async (
 };
 
 export const getDietHistory = async (
-    userId: number,
     days: number
 ): Promise<ApiResponse<DailyDietResponse[]>> => {
 
     const response =
         await apiConnector<ApiResponse<DailyDietResponse[]>>(
             "GET",
-            `${DIET_API.HISTORY}/${userId}/history`,
+            `${DIET_API.HISTORY}/history`,
             null,
             {
                 days,

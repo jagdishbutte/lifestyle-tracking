@@ -7,7 +7,6 @@ import {
     Target,
     Salad,
     User,
-    Settings,
 } from "lucide-react";
 
 import { NavLink } from "react-router-dom";
@@ -27,7 +26,6 @@ const iconMap = {
     Analytics: ChartColumn,
     "AI Assistant": Brain,
     Profile: User,
-    Settings: Settings,
 };
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
@@ -62,14 +60,11 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                                     to={item.path}
                                     onClick={onClose}
                                     className={({ isActive }) =>
-                                        `
-                                        mb-1 flex items-center gap-3 rounded-xl px-4 py-3 transition
-                                        ${
-                                            isActive
+                                        `mb-1 flex items-center gap-3 rounded-xl px-4 py-3 transition
+                                        ${isActive
                                                 ? "bg-teal-50 text-teal-700"
                                                 : "text-slate-700 hover:bg-slate-100"
-                                        }
-                                    `
+                                        }`
                                     }
                                 >
                                     <Icon size={18} />

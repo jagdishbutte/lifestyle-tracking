@@ -4,25 +4,21 @@ import { HABIT_API, HABIT_LOG_API } from "../api/apiEndpoints";
 import type { ApiResponse } from "../types/common";
 import type { HabitLogRequest, HabitLogResponse, HabitRequest, HabitResponse } from "../types/habit";
 
-export const getActiveHabits = async (
-    userId: number
-): Promise<ApiResponse<HabitResponse[]>> => {
+export const getActiveHabits = async (): Promise<ApiResponse<HabitResponse[]>> => {
 
     const response = await apiConnector<ApiResponse<HabitResponse[]>>(
         "GET",
-        `${HABIT_API.ACTIVE}/${userId}/active`
+        `${HABIT_API.ACTIVE}/active`
     );
 
     return response.data;
 };
 
-export const getTodayHabitLogs = async (
-    userId: number
-): Promise<ApiResponse<HabitLogResponse[]>> => {
+export const getTodayHabitLogs = async (): Promise<ApiResponse<HabitLogResponse[]>> => {
 
     const response = await apiConnector<ApiResponse<HabitLogResponse[]>>(
         "GET",
-        `${HABIT_LOG_API.TODAY}/${userId}/today`
+        `${HABIT_LOG_API.TODAY}/today`
     );
 
     return response.data;

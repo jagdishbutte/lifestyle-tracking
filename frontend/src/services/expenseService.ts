@@ -9,28 +9,25 @@ import type {
     ExpenseResponse,
 } from "../types/expense";
 
-export const getTodayExpenses = async (
-    userId: number
-): Promise<ApiResponse<DailyExpenseResponse>> => {
+export const getTodayExpenses = async (): Promise<ApiResponse<DailyExpenseResponse>> => {
 
     const response =
         await apiConnector<ApiResponse<DailyExpenseResponse>>(
             "GET",
-            `${EXPENSE_API.TODAY}/${userId}/today`
+            `${EXPENSE_API.TODAY}/today`
         );
 
     return response.data;
 };
 
 export const getExpenseHistory = async (
-    userId: number,
     days: number
 ): Promise<ApiResponse<DailyExpenseResponse[]>> => {
 
     const response =
         await apiConnector<ApiResponse<DailyExpenseResponse[]>>(
             "GET",
-            `${EXPENSE_API.HISTORY}/${userId}/history`,
+            `${EXPENSE_API.HISTORY}/history`,
             null,
             {
                 days,

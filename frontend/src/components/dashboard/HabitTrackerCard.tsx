@@ -11,7 +11,6 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const HabitTrackerCard = () => {
-    const userId = 6;
     const [habits, setHabits] = useState<HabitItem[]>([]);
     const navigate = useNavigate();
 
@@ -19,8 +18,8 @@ const HabitTrackerCard = () => {
         const loadHabits = async () => {
             try {
                 const [habitsResponse, habitLogsResponse] = await Promise.all([
-                    getActiveHabits(userId),
-                    getTodayHabitLogs(userId),
+                    getActiveHabits(),
+                    getTodayHabitLogs(),
                 ]);
 
                 if (habitsResponse.success && habitLogsResponse.success) {
@@ -48,7 +47,6 @@ const HabitTrackerCard = () => {
 
     const toggleHabit = async (habit: HabitItem) => {
         const request: HabitLogRequest = {
-            userId,
             habitId: habit.id,
             completed: !habit.completed,
         };

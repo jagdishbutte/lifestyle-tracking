@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -12,43 +12,31 @@ import JournalPage from "./pages/JournalPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import AiAssistantPage from "./pages/AiAssistantPage";
 import ProfilePage from "./pages/ProfilePage";
-import SettingsPage from "./pages/SettingsPage";
 import { useAuthStore } from "./store/authStore";
-import { useEffect } from "react";
 
 function App() {
-    const initialize = useAuthStore((state) => state.initialize);
+    const token = useAuthStore((state) => state.token);
 
-    useEffect(() => {
-        initialize();
-    }, []);
-    
+    const protect = (element: React.ReactElement) =>
+        token ? element : <Navigate to="/login" replace />;
+
     return (
         <BrowserRouter>
             <Routes>
+                {/* Public Routes */}
                 <Route path="/" element={<LandingPage />} />
-
                 <Route path="/register" element={<RegisterPage />} />
-
                 <Route path="/login" element={<LoginPage />} />
 
-                <Route path="/dashboard" element={<DashboardPage />} />
-
-                <Route path="/habits" element={<HabitsPage />} />
-
-                <Route path="/diet" element={<DietPage />} />
-
-                <Route path="/expenses" element={<ExpensesPage />} />
-
-                <Route path="/journal" element={<JournalPage />} />
-
-                <Route path="/analytics" element={<AnalyticsPage />} />
-
-                <Route path="/ai" element={<AiAssistantPage />} />
-
-                <Route path="/profile" element={<ProfilePage />} />
-
-                <Route path="/settings" element={<SettingsPage />} />
+                {/* Protected Routes */}
+                <Route path="/dashboard" element={protect(<DashboardPage />)} />
+                <Route path="/habits" element={protect(<HabitsPage />)} />
+                <Route path="/diet" element={protect(<DietPage />)} />
+                <Route path="/expenses" element={protect(<ExpensesPage />)} />
+                <Route path="/journal" element={protect(<JournalPage />)} />
+                <Route path="/analytics" element={protect(<AnalyticsPage />)} />
+                <Route path="/ai" element={protect(<AiAssistantPage />)} />
+                <Route path="/profile" element={protect(<ProfilePage />)} />
 
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>

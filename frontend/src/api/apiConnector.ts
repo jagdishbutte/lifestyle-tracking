@@ -11,19 +11,28 @@ export const axiosInstance = axios.create({
     }
 });
 
+const token = localStorage.getItem("token");
+
+// console.log(token)
+
 export const apiConnector = async <T>(
     method: Method,
     url: string,
     data?: unknown,
     params?: object,
-    headers?: object
+    headers?: Record<string, string>,
 ) => {
     const config: AxiosRequestConfig = {
         method,
         url,
         data,
         params,
-        headers,
+        headers: {
+            ...headers,
+            ...(token && {
+                Authorization: `Bearer ${token}`,
+            }),
+        },
     };
 
     return await axiosInstance<T>(config);

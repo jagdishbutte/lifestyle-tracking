@@ -12,7 +12,6 @@ export type ExpenseCategory =
     | "OTHER";
 
 export interface ExpenseRequest {
-    userId: number;
     expenseName: string;
     amount: number;
     category: ExpenseCategory;

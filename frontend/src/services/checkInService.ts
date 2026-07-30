@@ -7,13 +7,11 @@ import type {
     DailyCheckInResponse,
 } from "../types/checkin";
 
-export const getTodayCheckIn = async (
-    userId: number
-): Promise<ApiResponse<DailyCheckInResponse>> => {
+export const getTodayCheckIn = async (): Promise<ApiResponse<DailyCheckInResponse>> => {
 
     const response = await apiConnector<ApiResponse<DailyCheckInResponse>>(
         "GET",
-        `${CHECKIN_API.TODAY}/${userId}`
+        `${CHECKIN_API.TODAY}`
     );
 
     return response.data;

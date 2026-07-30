@@ -11,14 +11,9 @@ import BodyInfoCard from "../components/profile/BodyInfoCard";
 import LifestyleCard from "../components/profile/LifestyleCard";
 import DailyGoalsCard from "../components/profile/DailyGoalsCard";
 import SaveProfileBar from "../components/profile/SaveProfileBar";
-
 import { getProfile, updateProfile } from "../services/profileService";
-
 import type { UpdateProfileRequest, UserResponse } from "../types/profile";
-
 import { getErrorMessage } from "../utils/errorHandler";
-
-const userId = 6;
 
 const ProfilePage = () => {
     const navigate = useNavigate();
@@ -30,7 +25,7 @@ const ProfilePage = () => {
         try {
             setLoading(true);
 
-            const response = await getProfile(userId);
+            const response = await getProfile();
 
             if (response.success) {
                 setProfile(response.data);
@@ -77,7 +72,7 @@ const ProfilePage = () => {
         try {
             setSaving(true);
 
-            const response = await updateProfile(userId, request);
+            const response = await updateProfile(request);
 
             toast.success(response.message);
 

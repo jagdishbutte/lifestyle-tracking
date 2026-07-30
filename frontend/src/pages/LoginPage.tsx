@@ -4,6 +4,7 @@ import type { LoginRequest } from "../types/auth";
 import toast from "react-hot-toast";
 import { login } from "../services/authService";
 import { getErrorMessage } from "../utils/errorHandler";
+import { useAuthStore } from "../store/authStore";
 
 const LoginPage = () => {
     const [formData, setFormData] = useState<LoginRequest>({
@@ -28,14 +29,15 @@ const LoginPage = () => {
 
             if (response.success) {
                 toast.success(response.message);
-
-                // TODO: Store user in context/localStorage
-                // console.log(response.data);
-
+                useAuthStore.getState().login(response.data.token);
                 navigate("/dashboard");
             }
         } catch (error) {
-            toast.error(getErrorMessage(error));
+            if(getErrorMessage(error) == "Bad credentials") {
+                toast.error("Invalid email or password");
+            } else {
+                toast.error(getErrorMessage(error));
+            }
         }
     };
 

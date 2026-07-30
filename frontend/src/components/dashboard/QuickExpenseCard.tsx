@@ -8,15 +8,11 @@ import type {
 } from "../../types/expense";
 
 import { getTodayExpenses, deleteExpense } from "../../services/expenseService";
-
 import { getErrorMessage } from "../../utils/errorHandler";
-
 import ExpenseFormModal from "../expenses/ExpenseFormModal";
 import ConfirmModal from "../common/ConfirmModal";
 import { useNavigate } from "react-router-dom";
 import ExpenseCard from "../expenses/ExpenseCard";
-
-const userId = 6;
 
 const QuickExpenseCard = () => {
     const [todayExpenses, setTodayExpenses] =
@@ -37,7 +33,7 @@ const QuickExpenseCard = () => {
 
     const loadExpenses = async () => {
         try {
-            const response = await getTodayExpenses(userId);
+            const response = await getTodayExpenses();
 
             if (response.success) {
                 setTodayExpenses(response.data);

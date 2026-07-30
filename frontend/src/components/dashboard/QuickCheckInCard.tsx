@@ -21,9 +21,7 @@ const wellbeingOptions = [
 ];
 
 const QuickCheckInCard = () => {
-    const userId = 6;
-
-    const [checkIn, setCheckIn] = useState<DailyCheckInResponse>({
+    const defaultCheckIn: DailyCheckInResponse = {
         id: 0,
         date: "",
 
@@ -31,17 +29,19 @@ const QuickCheckInCard = () => {
         waterGlasses: 0,
         stepsWalked: 0,
         caloriesConsumed: 0,
-        wellbeingScore: 8,
+        wellbeingScore: 3,
 
         sleepGoalHours: 8,
         waterGoalGlasses: 8,
         stepsGoal: 8000,
         dailyCalorieGoal: 2200,
-    });
+    };
+    const [checkIn, setCheckIn] = useState<DailyCheckInResponse>(defaultCheckIn);
 
     const handleSave = async () => {
+        if (!checkIn) return;
+
         const request: DailyCheckInRequest = {
-            userId,
             sleepHours: checkIn.sleepHours,
             waterGlasses: checkIn.waterGlasses,
             stepsWalked: checkIn.stepsWalked,
@@ -61,18 +61,21 @@ const QuickCheckInCard = () => {
     };
 
     useEffect(() => {
-        const loadCheckIn = async () => {
-            try {
-                const response = await getTodayCheckIn(userId);
-                if (response.success) {
-                    setCheckIn(response.data);
-                }
-            } catch (error) {
-                toast.error(getErrorMessage(error));
+    const loadCheckIn = async () => {
+        try {
+            const response = await getTodayCheckIn();
+
+            if (response.success && response.data) {
+                setCheckIn(response.data);
             }
-        };
-        loadCheckIn();
-    }, []);
+
+        } catch (error) {
+            toast.error(getErrorMessage(error));
+        }
+    };
+
+    loadCheckIn();
+}, []);
 
     return (
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -141,8 +144,8 @@ const QuickCheckInCard = () => {
                     />
                 </div>
                 <div>
-                    <label className="mb-2 block text-sm text-slate-600">
-                        How's your day going?
+                    <label className="mb-3 block text-sm font-medium text-slate-700">
+                        How are you feeling today?
                     </label>
 
                     {wellbeingOptions.map((item) => (

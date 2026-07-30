@@ -13,13 +13,11 @@ import StatCard from "../components/dashboard/StatCard";
 
 import { getDashboardSummary } from "../services/dashboardService";
 import { getErrorMessage } from "../utils/errorHandler";
-
 import type { DashboardSummary, StatCardProps } from "../types/dashboard";
 import { getProfile } from "../services/profileService";
 import type { UserResponse } from "../types/profile";
 
 const DashboardPage = () => {
-    const userId = 6; // Replace after authentication
     const [user, setUser] = useState<UserResponse | null>(null);
     const [summary, setSummary] = useState<DashboardSummary>({
         sleepHours: 0,
@@ -38,7 +36,7 @@ const DashboardPage = () => {
     useEffect(() => {
         const loadDashboard = async () => {
             try {
-                const response = await getDashboardSummary(userId);
+                const response = await getDashboardSummary();
                 if (response.success) {
                     setSummary(response.data);
                 }
@@ -51,7 +49,7 @@ const DashboardPage = () => {
     }, []);
 
     useEffect(() => {
-        getProfile(userId).then((response) => {
+        getProfile().then((response) => {
             setUser(response.data);
         });
     }, []);

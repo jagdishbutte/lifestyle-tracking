@@ -18,8 +18,6 @@ import { getErrorMessage } from "../utils/errorHandler";
 import ExpenseCard from "../components/expenses/ExpenseCard";
 import ExpenseHistorySection from "../components/expenses/ExpenseHistorySection";
 
-const userId = 6;
-
 const ExpensePage = () => {
     const navigate = useNavigate();
     const [todayExpenses, setTodayExpenses] =
@@ -35,7 +33,7 @@ const ExpensePage = () => {
 
     const loadTodayExpenses = async () => {
         try {
-            const response = await getTodayExpenses(userId);
+            const response = await getTodayExpenses();
 
             if (response.success) {
                 setTodayExpenses(response.data);
@@ -47,7 +45,7 @@ const ExpensePage = () => {
 
     const loadHistory = async () => {
         try {
-            const response = await getExpenseHistory(userId, period);
+            const response = await getExpenseHistory(period);
 
             if (response.success) {
                 setHistory(response.data);

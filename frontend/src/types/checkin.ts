@@ -1,5 +1,4 @@
 export interface DailyCheckInRequest {
-    userId: number;
     sleepHours: number;
     waterGlasses: number;
     stepsWalked: number;

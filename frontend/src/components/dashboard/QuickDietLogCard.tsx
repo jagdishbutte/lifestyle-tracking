@@ -39,20 +39,15 @@ const MEALS: {
 
 const QuickDietLogCard = () => {
     const navigate = useNavigate();
-
-    const userId = 6;
-
     const [diet, setDiet] = useState<DailyDietResponse | null>(null);
-
     const [loading, setLoading] = useState(true);
-
     const [selectedMeal, setSelectedMeal] = useState<MealType | null>(null);
 
     const loadDiet = async () => {
         try {
             setLoading(true);
 
-            const response = await getTodayDiet(userId);
+            const response = await getTodayDiet();
 
             if (response.success) {
                 setDiet(response.data);

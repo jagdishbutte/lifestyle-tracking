@@ -25,7 +25,6 @@ export interface HabitResponse {
 }
 
 export interface HabitRequest {
-    userId: number;
     name: string;
 
     category:
@@ -45,7 +44,6 @@ export interface HabitRequest {
 }
 
 export interface HabitLogRequest {
-    userId: number;
     habitId: number;
     completed: boolean;
 }

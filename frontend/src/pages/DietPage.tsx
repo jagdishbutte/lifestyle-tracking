@@ -50,7 +50,6 @@ const meals: {
 
 const DietPage = () => {
     const navigate = useNavigate();
-    const userId = 6;
     const [todayDiet, setTodayDiet] = useState<DailyDietResponse | null>(null);
     const [selectedMeal, setSelectedMeal] = useState<MealType | null>(null);
     const [deleteEntryId, setDeleteEntryId] = useState<number | null>(null);
@@ -58,9 +57,7 @@ const DietPage = () => {
     const [editingEntry, setEditingEntry] = useState<DietEntryResponse | null>(
         null,
     );
-    const [loading, setLoading] = useState(true);
     const [history, setHistory] = useState<DailyDietResponse[]>([]);
-    const [historyLoading, setHistoryLoading] = useState(false);
     const [period, setPeriod] = useState(7);
     const [search, setSearch] = useState("");
 
@@ -81,33 +78,25 @@ const DietPage = () => {
 
     const loadTodayDiet = async () => {
         try {
-            setLoading(true);
-
-            const response = await getTodayDiet(userId);
+            const response = await getTodayDiet();
 
             if (response.success) {
                 setTodayDiet(response.data);
             }
         } catch (error) {
             toast.error(getErrorMessage(error));
-        } finally {
-            setLoading(false);
         }
     };
 
     const loadHistory = async () => {
         try {
-            setHistoryLoading(true);
-
-            const response = await getDietHistory(userId, period);
+            const response = await getDietHistory(period);
 
             if (response.success) {
                 setHistory(response.data);
             }
         } catch (error) {
             toast.error(getErrorMessage(error));
-        } finally {
-            setHistoryLoading(false);
         }
     };
 

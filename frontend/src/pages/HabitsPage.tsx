@@ -13,7 +13,6 @@ import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const HabitsPage = () => {
-    const userId = 6;
     const [habits, setHabits] = useState<HabitResponse[]>([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
@@ -27,7 +26,7 @@ const HabitsPage = () => {
     const loadHabits = async () => {
         try {
             setLoading(true);
-            const response = await getActiveHabits(userId);
+            const response = await getActiveHabits();
 
             if (response.success) {
                 setHabits(response.data);
