@@ -22,14 +22,13 @@ public class UserController {
 
     /**
      * Method   : GET
-     * API      : /api/users/{id}
+     * API      : /api/users/
      * Function : Returns a user's profile by ID.
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<UserResponse>> getUserById(
-            @PathVariable Long id) {
+    @GetMapping
+    public ResponseEntity<ApiResponse<UserResponse>> getUserById() {
 
-        com.lifestyleai.dto.user.UserResponse response = userService.getUserById(id);
+        com.lifestyleai.dto.user.UserResponse response = userService.getUserById();
 
         return ResponseEntity.ok(
                 new ApiResponse<>(
@@ -42,11 +41,11 @@ public class UserController {
 
     /**
      * Method   : GET
-     * API      : /api/users
+     * API      : /api/users/all
      * Function : Returns all registered users.
      * Note     : Intended for Admin Dashboard.
      */
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<ApiResponse<List<UserResponse>>> getAllUsers() {
 
         List<UserResponse> response = userService.getAllUsers();
@@ -62,15 +61,14 @@ public class UserController {
 
     /**
      * Method   : PUT
-     * API      : /api/users/{id}/profile
+     * API      : /api/users/profile
      * Function : Updates a user's profile information.
      */
-    @PutMapping("/{id}/profile")
+    @PutMapping("/profile")
     public ResponseEntity<ApiResponse<UserResponse>> updateProfile(
-            @PathVariable Long id,
             @Valid @RequestBody UpdateProfileRequest request) {
 
-        UserResponse response = userService.updateProfile(id, request);
+        UserResponse response = userService.updateProfile(request);
 
         return ResponseEntity.ok(
                 new ApiResponse<>(
@@ -83,15 +81,14 @@ public class UserController {
 
     /**
      * Method   : PUT
-     * API      : /api/users/{id}/password
+     * API      : /api/users/password
      * Function : Updates a user's account password.
      */
-    @PutMapping("/{id}/password")
+    @PutMapping("/password")
     public ResponseEntity<ApiResponse<String>> updatePassword(
-            @PathVariable Long id,
             @Valid @RequestBody UpdatePasswordRequest request) {
 
-        userService.updatePassword(id, request);
+        userService.updatePassword(request);
 
         return ResponseEntity.ok(
                 new ApiResponse<>(
@@ -104,15 +101,14 @@ public class UserController {
 
     /**
      * Method   : DELETE
-     * API      : /api/users/{id}
+     * API      : /api/users
      * Function : Deletes a user account.
      * Note     : Intended for Admin Dashboard.
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<String>> deleteUser(
-            @PathVariable Long id) {
+    @DeleteMapping
+    public ResponseEntity<ApiResponse<String>> deleteUser() {
 
-        userService.deleteUser(id);
+        userService.deleteUser();
 
         return ResponseEntity.ok(
                 new ApiResponse<>(

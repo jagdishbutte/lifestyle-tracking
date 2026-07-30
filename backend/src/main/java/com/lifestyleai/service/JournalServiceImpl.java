@@ -74,15 +74,13 @@ public class JournalServiceImpl implements JournalService {
     }
     
     @Override
-    public DailyJournalResponse getTodayJournals(Long userId) {
-
-        userHelper.findActiveUser(userId);
+    public DailyJournalResponse getTodayJournals() {
 
         LocalDate today = LocalDate.now();
 
         List<Journal> journals =
                 journalRepository.findByUserIdAndCreatedAtBetweenOrderByCreatedAtDesc(
-                        userId,
+                        userHelper.getCurrentUserId(),
                         today.atStartOfDay(),
                         today.plusDays(1).atStartOfDay());
 
@@ -93,7 +91,6 @@ public class JournalServiceImpl implements JournalService {
     
     @Override
     public List<DailyJournalResponse> getJournalHistory(
-            Long userId,
             Integer days) {
 
         // User user = userHelper.getCurrentUser();
@@ -115,7 +112,7 @@ public class JournalServiceImpl implements JournalService {
         List<Journal> journals =
                 journalRepository
                         .findByUserIdAndCreatedAtBetweenOrderByCreatedAtDesc(
-                                userId,
+                                userHelper.getCurrentUserId(),
                                 start,
                                 end);
 

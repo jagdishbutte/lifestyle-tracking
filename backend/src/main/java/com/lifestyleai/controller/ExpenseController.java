@@ -80,15 +80,14 @@ public class ExpenseController {
     
     /**
      * Method   : GET
-     * API      : /api/expenses/user/{userId}/today
+     * API      : /api/expenses/user/today
      * Function : Returns today's expense summary.
      */
-    @GetMapping("/user/{userId}/today")
-    public ResponseEntity<ApiResponse<DailyExpenseResponse>> getTodayExpenses(
-            @PathVariable Long userId) {
+    @GetMapping("/user/today")
+    public ResponseEntity<ApiResponse<DailyExpenseResponse>> getTodayExpenses() {
 
         DailyExpenseResponse response =
-                expenseService.getTodayExpenses(userId);
+                expenseService.getTodayExpenses();
 
         return ResponseEntity.ok(
                 new ApiResponse<>(
@@ -99,17 +98,15 @@ public class ExpenseController {
     
     /**
      * Method   : GET
-     * API      : /api/expenses/user/{userId}/history?days=7
+     * API      : /api/expenses/user/history?days=7
      * Function : Returns expense history for the last N days.
      */
-    @GetMapping("/user/{userId}/history")
+    @GetMapping("/user/history")
     public ResponseEntity<ApiResponse<List<DailyExpenseResponse>>> getExpenseHistory(
-            @PathVariable Long userId,
             @RequestParam(defaultValue = "7") Integer days) {
 
         List<DailyExpenseResponse> response =
                 expenseService.getExpenseHistory(
-                        userId,
                         days);
 
         return ResponseEntity.ok(

@@ -7,6 +7,6 @@ public interface DailyCheckInService {
 
     DailyCheckInResponse saveTodayCheckIn(DailyCheckInRequest request);
 
-    DailyCheckInResponse getTodayCheckIn(Long userId);
+    DailyCheckInResponse getTodayCheckIn();
 
 }

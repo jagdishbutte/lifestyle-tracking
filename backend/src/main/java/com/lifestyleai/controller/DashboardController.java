@@ -3,7 +3,6 @@ package com.lifestyleai.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,15 +22,13 @@ public class DashboardController {
 
     /**
      * Method   : GET
-     * API      : /api/dashboard/summary/{userId}
+     * API      : /api/dashboard/summary
      * Function : Returns dashboard summary cards.
      */
-    @GetMapping("/summary/{userId}")
-    public ResponseEntity<ApiResponse<DashboardSummaryResponse>> getDashboardSummary(
-            @PathVariable Long userId) {
+    @GetMapping("/summary")
+    public ResponseEntity<ApiResponse<DashboardSummaryResponse>> getDashboardSummary() {
 
-        DashboardSummaryResponse response =
-                dashboardService.getDashboardSummary(userId);
+        DashboardSummaryResponse response = dashboardService.getDashboardSummary();
 
         return ResponseEntity.ok(
                 new ApiResponse<>(

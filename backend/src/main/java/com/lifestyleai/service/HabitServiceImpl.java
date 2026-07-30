@@ -48,13 +48,13 @@ public class HabitServiceImpl implements HabitService {
     }
 
     @Override
-    public List<HabitResponse> getHabitsByUser(Long userId) {
+    public List<HabitResponse> getHabitsByUser() {
 
-        return habitRepository.findByUserIdAndIsActiveTrue(userId)
+        return habitRepository.findByUserIdAndIsActiveTrue(userHelper.getCurrentUserId())
                 .stream()
                 .map(habit -> {
                     HabitResponse response = mapper.map(habit, HabitResponse.class);
-                    response.setUserId(userId);
+                    response.setUserId(userHelper.getCurrentUserId());
                     return response;
                 })
                 .toList();

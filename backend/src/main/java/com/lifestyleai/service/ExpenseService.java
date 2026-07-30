@@ -17,13 +17,12 @@ public interface ExpenseService {
 	/**
 	 * Returns today's expense summary.
 	 */
-	DailyExpenseResponse getTodayExpenses(Long userId);
+	DailyExpenseResponse getTodayExpenses();
 
 	/**
 	 * Returns expense history for the last N days.
 	 */
 	List<DailyExpenseResponse> getExpenseHistory(
-	        Long userId,
 	        Integer days);
 
 }

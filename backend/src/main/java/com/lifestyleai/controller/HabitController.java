@@ -45,11 +45,10 @@ public class HabitController {
      * API      : /api/habits/user/{userId}/active
      * Function : Returns all active habits of a user.
      */
-    @GetMapping("/user/{userId}/active")
-    public ResponseEntity<ApiResponse<List<HabitResponse>>> getHabitsByUser(
-            @PathVariable Long userId) {
+    @GetMapping("/user/active")
+    public ResponseEntity<ApiResponse<List<HabitResponse>>> getHabitsByUser() {
 
-        List<HabitResponse> response = habitService.getHabitsByUser(userId);
+        List<HabitResponse> response = habitService.getHabitsByUser();
 
         return ResponseEntity.ok(
                 new ApiResponse<>(

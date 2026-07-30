@@ -9,7 +9,7 @@ public interface HabitService {
 
     HabitResponse addHabit(HabitRequest request);
 
-    List<HabitResponse> getHabitsByUser(Long userId);
+    List<HabitResponse> getHabitsByUser();
 
     HabitResponse updateHabit(Long id, HabitRequest request);
 

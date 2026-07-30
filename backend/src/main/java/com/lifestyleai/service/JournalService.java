@@ -17,13 +17,12 @@ public interface JournalService {
     /**
      * Returns today's journal entries.
      */
-    DailyJournalResponse getTodayJournals(Long userId);
+    DailyJournalResponse getTodayJournals();
 
     /**
      * Returns journal history for the last N days.
      */
     List<DailyJournalResponse> getJournalHistory(
-            Long userId,
             Integer days);
 
 }

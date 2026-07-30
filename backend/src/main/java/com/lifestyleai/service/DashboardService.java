@@ -4,6 +4,6 @@ import com.lifestyleai.dto.dashboard.DashboardSummaryResponse;
 
 public interface DashboardService {
 
-    DashboardSummaryResponse getDashboardSummary(Long userId);
+    DashboardSummaryResponse getDashboardSummary();
 
 }

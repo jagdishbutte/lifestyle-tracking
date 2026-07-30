@@ -33,6 +33,8 @@ public class HabitLogServiceImpl implements HabitLogService {
     public HabitLogResponse updateHabitCompletion(HabitLogRequest request) {
 
     	User user = userHelper.getCurrentUser();
+    	System.out.println(request.getHabitId() + "HabitId");
+    	System.out.println(request.getHabitId() + "HabitId");
 
         Habit habit = habitRepository
                 .findByIdAndUserIdAndIsActiveTrue(
@@ -58,12 +60,10 @@ public class HabitLogServiceImpl implements HabitLogService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<HabitLogResponse> getTodayHabitLogs(Long userId) {
-
-        userHelper.findActiveUser(userId);
+    public List<HabitLogResponse> getTodayHabitLogs() {
 
         return habitLogRepository
-                .findByHabitUserIdAndDate(userId, LocalDate.now())
+                .findByHabitUserIdAndDate(userHelper.getCurrentUserId(), LocalDate.now())
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
@@ -73,10 +73,9 @@ public class HabitLogServiceImpl implements HabitLogService {
     @Transactional(readOnly = true)
 
     public List<HabitLogResponse> getHabitLogsByHabit(
-            Long userId,
             Long habitId) {
 
-        User user = userHelper.findActiveUser(userId);
+        User user = userHelper.getCurrentUser();
 
         Habit habit = habitRepository
                 .findByIdAndUserIdAndIsActiveTrue(
@@ -95,14 +94,11 @@ public class HabitLogServiceImpl implements HabitLogService {
     @Override
     @Transactional(readOnly = true)
     public List<HabitLogResponse> getHabitLogsBetweenDates(
-            Long userId,
             LocalDate start,
             LocalDate end) {
 
-        userHelper.findActiveUser(userId);
-
         return habitLogRepository
-                .findByHabitUserIdAndDateBetween(userId, start, end)
+                .findByHabitUserIdAndDateBetween(userHelper.getCurrentUserId(), start, end)
                 .stream()
                 .map(this::mapToResponse)
                 .toList();

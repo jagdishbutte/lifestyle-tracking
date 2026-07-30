@@ -83,15 +83,13 @@ public class JournalController {
     
     /**
      * Method   : GET
-     * API      : /api/journals/user/{userId}/today
+     * API      : /api/journals/user/today
      * Function : Returns today's journal entries.
      */
-    @GetMapping("/user/{userId}/today")
-    public ResponseEntity<ApiResponse<DailyJournalResponse>> getTodayJournals(
-            @PathVariable Long userId) {
+    @GetMapping("/user/today")
+    public ResponseEntity<ApiResponse<DailyJournalResponse>> getTodayJournals() {
 
-        DailyJournalResponse response =
-                journalService.getTodayJournals(userId);
+        DailyJournalResponse response = journalService.getTodayJournals();
 
         return ResponseEntity.ok(
                 new ApiResponse<>(
@@ -102,18 +100,14 @@ public class JournalController {
     
     /**
      * Method   : GET
-     * API      : /api/journals/user/{userId}/history?days=7
+     * API      : /api/journals/user/history?days=7
      * Function : Returns journal history for the last N days.
      */
-    @GetMapping("/user/{userId}/history")
+    @GetMapping("/user/history")
     public ResponseEntity<ApiResponse<List<DailyJournalResponse>>> getJournalHistory(
-            @PathVariable Long userId,
             @RequestParam(defaultValue = "7") Integer days) {
 
-        List<DailyJournalResponse> response =
-                journalService.getJournalHistory(
-                        userId,
-                        days);
+        List<DailyJournalResponse> response = journalService.getJournalHistory(days);
 
         return ResponseEntity.ok(
                 new ApiResponse<>(

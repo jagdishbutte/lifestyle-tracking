@@ -41,15 +41,14 @@ public class DailyCheckInController {
 
     /**
      * Method   : GET
-     * API      : /api/checkin/user/{userId}
+     * API      : /api/checkin/user
      * Function : Returns today's check-in.
      */
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<ApiResponse<DailyCheckInResponse>> getTodayCheckIn(
-            @PathVariable Long userId) {
+    @GetMapping("/user")
+    public ResponseEntity<ApiResponse<DailyCheckInResponse>> getTodayCheckIn() {
 
         DailyCheckInResponse response =
-                dailyCheckInService.getTodayCheckIn(userId);
+                dailyCheckInService.getTodayCheckIn();
 
         return ResponseEntity.ok(
                 new ApiResponse<>(

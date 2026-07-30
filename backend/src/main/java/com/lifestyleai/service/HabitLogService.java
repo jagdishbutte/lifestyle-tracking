@@ -10,12 +10,11 @@ public interface HabitLogService {
 
 	HabitLogResponse updateHabitCompletion(HabitLogRequest request);
 
-	List<HabitLogResponse> getTodayHabitLogs(Long userId);
+	List<HabitLogResponse> getTodayHabitLogs();
 
-	List<HabitLogResponse> getHabitLogsByHabit(Long userId, Long habitId);
+	List<HabitLogResponse> getHabitLogsByHabit(Long habitId);
 
 	List<HabitLogResponse> getHabitLogsBetweenDates(
-	        Long userId,
 	        LocalDate start,
 	        LocalDate end);
 

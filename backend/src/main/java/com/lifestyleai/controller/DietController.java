@@ -48,17 +48,16 @@ public class DietController {
 
     /**
      * Method   : GET
-     * API      : /api/diet/user/{userId}/date/{date}
+     * API      : /api/diet/user/date/{date}
      * Function : Returns complete diet summary for a specific date.
      */
-    @GetMapping("/user/{userId}/date/{date}")
+    @GetMapping("/user/date/{date}")
     public ResponseEntity<ApiResponse<DailyDietResponse>> getDietByDate(
-            @PathVariable Long userId,
             @PathVariable
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate date) {
 
-        DailyDietResponse response = dietService.getDietByDate(userId, date);
+        DailyDietResponse response = dietService.getDietByDate(date);
 
         return ResponseEntity.ok(
                 new ApiResponse<>(
@@ -69,14 +68,13 @@ public class DietController {
 
     /**
      * Method   : GET
-     * API      : /api/diet/user/{userId}/today
+     * API      : /api/diet/user/today
      * Function : Returns today's diet summary.
      */
-    @GetMapping("/user/{userId}/today")
-    public ResponseEntity<ApiResponse<DailyDietResponse>> getTodayDiet(
-            @PathVariable Long userId) {
+    @GetMapping("/user/today")
+    public ResponseEntity<ApiResponse<DailyDietResponse>> getTodayDiet() {
 
-        DailyDietResponse response = dietService.getTodayDiet(userId);
+        DailyDietResponse response = dietService.getTodayDiet();
 
         return ResponseEntity.ok(
                 new ApiResponse<>(
@@ -128,13 +126,11 @@ public class DietController {
      * API      : /api/diet/user/{userId}/history?days=7
      * Function : Returns diet history for the last N days.
      */
-    @GetMapping("/user/{userId}/history")
+    @GetMapping("/user/history")
     public ResponseEntity<ApiResponse<List<DailyDietResponse>>> getDietHistory(
-            @PathVariable Long userId,
             @RequestParam(defaultValue = "7") Integer days) {
 
-        List<DailyDietResponse> response =
-                dietService.getDietHistory(userId, days);
+        List<DailyDietResponse> response = dietService.getDietHistory(days);
 
         return ResponseEntity.ok(
                 new ApiResponse<>(

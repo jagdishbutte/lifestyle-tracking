@@ -18,18 +18,17 @@ public interface DietService {
     /**
      * Returns diet summary for a specific date.
      */
-    DailyDietResponse getDietByDate(Long userId, LocalDate date);
+    DailyDietResponse getDietByDate(LocalDate date);
 
     /**
      * Returns today's diet summary.
      */
-    DailyDietResponse getTodayDiet(Long userId);
+    DailyDietResponse getTodayDiet();
 
     /**
      * Updates a single food entry.
      */
-    DietEntryResponse updateDietEntry(Long dietEntryId,
-                                      UpdateDietEntryRequest request);
+    DietEntryResponse updateDietEntry(Long dietEntryId, UpdateDietEntryRequest request);
 
     /**
      * Deletes a single food entry.
@@ -40,8 +39,6 @@ public interface DietService {
     /**
      * Return diet entries in given date range
      */
-    List<DailyDietResponse> getDietHistory(
-            Long userId,
-            Integer days);
+    List<DailyDietResponse> getDietHistory(Integer days);
 
 }

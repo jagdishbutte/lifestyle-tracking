@@ -46,15 +46,14 @@ public class HabitLogController {
 
     /**
      * Method   : GET
-     * API      : /api/habit-logs/user/{userId}/today
+     * API      : /api/habit-logs/user/today
      * Function : Returns today's habit logs of a user.
      */
-    @GetMapping("/user/{userId}/today")
-    public ResponseEntity<ApiResponse<List<HabitLogResponse>>> getTodayHabitLogs(
-            @PathVariable Long userId) {
+    @GetMapping("/user/today")
+    public ResponseEntity<ApiResponse<List<HabitLogResponse>>> getTodayHabitLogs() {
 
         List<HabitLogResponse> response =
-                habitLogService.getTodayHabitLogs(userId);
+                habitLogService.getTodayHabitLogs();
 
         return ResponseEntity.ok(
                 new ApiResponse<>(
@@ -70,11 +69,10 @@ public class HabitLogController {
      */
     @GetMapping("/habit/{habitId}")
     public ResponseEntity<ApiResponse<List<HabitLogResponse>>> getHabitLogsByHabit(
-            @RequestParam Long userId,
             @PathVariable Long habitId) {
 
         List<HabitLogResponse> response =
-                habitLogService.getHabitLogsByHabit(userId, habitId);
+                habitLogService.getHabitLogsByHabit(habitId);
 
         return ResponseEntity.ok(
                 new ApiResponse<>(
@@ -85,12 +83,11 @@ public class HabitLogController {
 
     /**
      * Method   : GET
-     * API      : /api/habit-logs/user/{userId}
+     * API      : /api/habit-logs/user
      * Function : Returns habit logs within a date range.
      */
-    @GetMapping("/user/{userId}")
+    @GetMapping("/user")
     public ResponseEntity<ApiResponse<List<HabitLogResponse>>> getHabitLogsBetweenDates(
-            @PathVariable Long userId,
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate start,
@@ -99,7 +96,7 @@ public class HabitLogController {
             LocalDate end) {
 
         List<HabitLogResponse> response =
-                habitLogService.getHabitLogsBetweenDates(userId, start, end);
+                habitLogService.getHabitLogsBetweenDates(start, end);
 
         return ResponseEntity.ok(
                 new ApiResponse<>(

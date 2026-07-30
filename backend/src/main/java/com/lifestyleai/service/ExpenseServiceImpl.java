@@ -84,22 +84,18 @@ public class ExpenseServiceImpl implements ExpenseService {
 	}
 	
 	@Override
-	public DailyExpenseResponse getTodayExpenses(
-	        Long userId) {
+	public DailyExpenseResponse getTodayExpenses() {
 
 	    return buildDailyExpenseResponse(
 	            expenseRepository.findByUserIdAndExpenseDate(
-	                    userId,
+	                    userHelper.getCurrentUserId(),
 	                    LocalDate.now()),
 	            LocalDate.now());
 	}
 	
 	@Override
 	public List<DailyExpenseResponse> getExpenseHistory(
-	        Long userId,
 	        Integer days) {
-
-	    userHelper.findActiveUser(userId);
 
 	    if (!List.of(7, 30, 90, 365).contains(days)) {
 	        throw new BadRequestException("Invalid history period.");
@@ -113,7 +109,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 	    List<Expense> expenses =
 	            expenseRepository
 	                    .findByUserIdAndExpenseDateBetweenOrderByExpenseDateDesc(
-	                            userId,
+	                            userHelper.getCurrentUserId(),
 	                            startDate,
 	                            endDate);
 

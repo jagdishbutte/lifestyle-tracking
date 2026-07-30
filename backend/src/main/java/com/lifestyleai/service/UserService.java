@@ -19,13 +19,13 @@ public interface UserService {
     LoginResponse login(LoginRequest request);
 
     // User Management
-    UserResponse getUserById(Long id);
+    UserResponse getUserById();
 
     List<UserResponse> getAllUsers();
 
-    UserResponse updateProfile(Long id, UpdateProfileRequest request);
+    UserResponse updateProfile(UpdateProfileRequest request);
 
-    void updatePassword(Long id, UpdatePasswordRequest request);
+    void updatePassword(UpdatePasswordRequest request);
 
-    void deleteUser(Long id);
+    void deleteUser();
 }

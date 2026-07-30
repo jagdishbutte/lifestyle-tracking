@@ -84,9 +84,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserResponse getUserById(Long id) {
+	public UserResponse getUserById() {
 
-		User user = userHelper.findActiveUser(id);
+		User user = userHelper.getCurrentUser();
 
 	    return mapper.map(user, UserResponse.class);
 	}
@@ -102,9 +102,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserResponse updateProfile(Long id, UpdateProfileRequest request) {
+	public UserResponse updateProfile(UpdateProfileRequest request) {
 
-		User user = userHelper.findActiveUser(id);
+		User user = userHelper.getCurrentUser();
 
 	    user.setGender(request.getGender());
 	    user.setDateOfBirth(request.getDateOfBirth());
@@ -126,9 +126,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void updatePassword(Long id, UpdatePasswordRequest request) {
+	public void updatePassword(UpdatePasswordRequest request) {
 
-		User user = userHelper.findActiveUser(id);
+		User user = userHelper.getCurrentUser();
 
 	    // Later:
 	    // validate current password
@@ -140,9 +140,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void deleteUser(Long id) {
+	public void deleteUser() {
 
-		User user = userHelper.findActiveUser(id);
+		User user = userHelper.getCurrentUser();
 
 		user.setIsActive(false);
 

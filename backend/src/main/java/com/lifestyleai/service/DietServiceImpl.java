@@ -66,26 +66,24 @@ public class DietServiceImpl implements DietService {
 
         dietEntryRepository.saveAll(entries);
 
-        return getDietByDate(userHelper.getCurrentUserId(),
-                request.getConsumedDate());
+        return getDietByDate(request.getConsumedDate());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public DailyDietResponse getDietByDate(Long userId,
-                                           LocalDate date) {
+    public DailyDietResponse getDietByDate(LocalDate date) {
 
         List<DietEntry> entries =
-                dietEntryRepository.findByUserIdAndConsumedDate(userId, date);
+                dietEntryRepository.findByUserIdAndConsumedDate(userHelper.getCurrentUserId(), date);
 
         return buildDailyResponse(entries, date);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public DailyDietResponse getTodayDiet(Long userId) {
+    public DailyDietResponse getTodayDiet() {
 
-        return getDietByDate(userId, LocalDate.now());
+        return getDietByDate(LocalDate.now());
     }
 
     @Override
@@ -112,10 +110,7 @@ public class DietServiceImpl implements DietService {
     
     @Override
     public List<DailyDietResponse> getDietHistory(
-            Long userId,
             Integer days) {
-
-        userHelper.findActiveUser(userId);
 
         LocalDate endDate = LocalDate.now();
 
@@ -124,7 +119,7 @@ public class DietServiceImpl implements DietService {
         List<DietEntry> entries =
                 dietEntryRepository
                         .findByUserIdAndConsumedDateBetweenOrderByConsumedDateDesc(
-                                userId,
+                                userHelper.getCurrentUserId(),
                                 startDate,
                                 endDate);
 

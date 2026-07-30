@@ -9,7 +9,6 @@ import com.lifestyleai.dto.checkin.DailyCheckInRequest;
 import com.lifestyleai.dto.checkin.DailyCheckInResponse;
 import com.lifestyleai.entity.DailyCheckIn;
 import com.lifestyleai.entity.User;
-import com.lifestyleai.exception.ResourceNotFoundException;
 import com.lifestyleai.repository.DailyCheckInRepository;
 import com.lifestyleai.repository.DietEntryRepository;
 import com.lifestyleai.service.common.UserHelper;
@@ -53,14 +52,12 @@ public class DailyCheckInServiceImpl implements DailyCheckInService {
 
     @Override
     @Transactional(readOnly = true)
-    public DailyCheckInResponse getTodayCheckIn(Long userId) {
+    public DailyCheckInResponse getTodayCheckIn() {
 
-        DailyCheckIn checkIn = dailyCheckInRepository
-                .findByUserIdAndDate(userId, LocalDate.now())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Today's check-in not found."));
-
-        return buildResponse(checkIn);
+        return dailyCheckInRepository
+                .findByUserIdAndDate(userHelper.getCurrentUserId(), LocalDate.now())
+                .map(this::buildResponse)
+                .orElse(null);
     }
 
     /* ==========================================================

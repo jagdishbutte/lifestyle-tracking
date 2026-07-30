@@ -28,14 +28,14 @@ public class DashboardServiceImpl implements DashboardService {
     private final HabitLogRepository habitLogRepository;
 
     @Override
-    public DashboardSummaryResponse getDashboardSummary(Long userId) {
+    public DashboardSummaryResponse getDashboardSummary() {
 
-        User user = userHelper.findActiveUser(userId);
+        User user = userHelper.getCurrentUser();
 
         LocalDate today = LocalDate.now();
 
         DailyCheckIn checkIn = dailyCheckInRepository
-                .findByUserIdAndDate(userId, today)
+                .findByUserIdAndDate(userHelper.getCurrentUserId(), today)
                 .orElse(null);
 
         DashboardSummaryResponse response = new DashboardSummaryResponse();
@@ -53,16 +53,16 @@ public class DashboardServiceImpl implements DashboardService {
 
         // Calories
         Double calories = dietEntryRepository
-                .getTotalCaloriesByUserAndDate(userId, today);
+                .getTotalCaloriesByUserAndDate(userHelper.getCurrentUserId(), today);
 
         response.setCaloriesConsumed(calories.intValue());
 
         // Habits
         Long completed = habitLogRepository
-                .countCompletedHabits(userId, today);
+                .countCompletedHabits(userHelper.getCurrentUserId(), today);
 
         Long total = habitRepository
-                .countTotalHabits(userId);
+                .countTotalHabits(userHelper.getCurrentUserId());
 
         response.setCompletedHabits(completed.intValue());
         response.setTotalHabits(total.intValue());
