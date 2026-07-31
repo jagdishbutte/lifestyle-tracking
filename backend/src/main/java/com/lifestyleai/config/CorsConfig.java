@@ -15,6 +15,9 @@ public class CorsConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.addAllowedOrigin("http://localhost:5173");
+        
+        configuration.addAllowedOrigin("https://lifestyle-tracking.vercel.app");
+        
 
         configuration.addAllowedHeader("*");
 
