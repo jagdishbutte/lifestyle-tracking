@@ -3,18 +3,9 @@ pipeline {
     agent any
 
     environment {
-
-        IMAGE_NAME = "jagdishbutte/lifestyle-ai-backend"
+        IMAGE_NAME = "jagdishbutte/lifestyle-ai"
+        IMAGE_TAG = "latest"
         CONTAINER_NAME = "lifestyle-ai-backend"
-
-        DB_URL = credentials('db-url')
-        DB_USERNAME = credentials('db-username')
-        DB_PASSWORD = credentials('db-password')
-
-        JWT_SECRET = credentials('jwt-secret')
-
-        SERVER_PORT = "8080"
-        SHOW_SQL = "false"
     }
 
     stages {
@@ -25,7 +16,7 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build Jar') {
             steps {
                 sh 'mvn clean package -DskipTests'
             }
@@ -33,67 +24,43 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME:latest .'
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
             }
         }
 
-        stage('Push Image') {
-
+        stage('Push Docker Image') {
             steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )
+                ]) {
 
-                withDockerRegistry(
-                        credentialsId: 'dockerhub-credentials',
-                        url: '') {
-
-                    sh 'docker push $IMAGE_NAME:latest'
+                    sh '''
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                    docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                    '''
                 }
             }
         }
 
-        stage('Deploy to EC2') {
-
+        stage('Deploy Locally') {
             steps {
 
-                sshagent(credentials: ['ec2-ssh']) {
+                sh '''
+                docker stop ${CONTAINER_NAME} || true
 
-                    sh """
+                docker rm ${CONTAINER_NAME} || true
 
-                    ssh -o StrictHostKeyChecking=no ubuntu@YOUR_EC2_IP << EOF
-
-                    docker pull $IMAGE_NAME:latest
-
-                    docker stop $CONTAINER_NAME || true
-
-                    docker rm $CONTAINER_NAME || true
-
-                    docker run -d \
-                        --name $CONTAINER_NAME \
-                        -p 8080:8080 \
-                        -e DB_URL="$DB_URL" \
-                        -e DB_USERNAME="$DB_USERNAME" \
-                        -e DB_PASSWORD="$DB_PASSWORD" \
-                        -e JWT_SECRET="$JWT_SECRET" \
-                        -e SHOW_SQL=false \
-                        -e SERVER_PORT=8080 \
-                        $IMAGE_NAME:latest
-
-                    docker image prune -f
-
-                    EOF
-                    """
-                }
+                docker run -d \
+                    --name ${CONTAINER_NAME} \
+                    --env-file .env \
+                    -p 8080:8080 \
+                    ${IMAGE_NAME}:${IMAGE_TAG}
+                '''
             }
-        }
-    }
-
-    post {
-
-        success {
-            echo 'Deployment Successful 🚀'
-        }
-
-        failure {
-            echo 'Deployment Failed ❌'
         }
     }
 }
