@@ -18,13 +18,17 @@ pipeline {
 
         stage('Build Jar') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                dir('backend') {
+                    sh 'mvn clean package -DskipTests'
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                dir('backend') {
+                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                }
             }
         }
 
@@ -32,35 +36,53 @@ pipeline {
             steps {
                 withCredentials([
                     usernamePassword(
-                        credentialsId: 'dockerhub',
+                        credentialsId: 'DockerHubCreds',
                         usernameVariable: 'DOCKER_USER',
                         passwordVariable: 'DOCKER_PASS'
                     )
                 ]) {
 
                     sh '''
-                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                    docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push ${IMAGE_NAME}:${IMAGE_TAG}
                     '''
                 }
             }
         }
 
-        stage('Deploy Locally') {
+        stage('Deploy') {
             steps {
 
-                sh '''
-                docker stop ${CONTAINER_NAME} || true
+                withCredentials([
+                    file(credentialsId: 'backend-env', variable: 'ENV_FILE')
+                ]) {
 
-                docker rm ${CONTAINER_NAME} || true
+                    sh '''
+                        docker pull ${IMAGE_NAME}:${IMAGE_TAG}
 
-                docker run -d \
-                    --name ${CONTAINER_NAME} \
-                    --env-file .env \
-                    -p 8080:8080 \
-                    ${IMAGE_NAME}:${IMAGE_TAG}
-                '''
+                        docker stop ${CONTAINER_NAME} || true
+                        docker rm ${CONTAINER_NAME} || true
+
+                        docker run -d \
+                          --name ${CONTAINER_NAME} \
+                          --restart unless-stopped \
+                          --env-file "$ENV_FILE" \
+                          -p 8080:8080 \
+                          ${IMAGE_NAME}:${IMAGE_TAG}
+                    '''
+                }
             }
+        }
+    }
+
+    post {
+
+        success {
+            echo "Deployment Successful ✅"
+        }
+
+        failure {
+            echo "Deployment Failed ❌"
         }
     }
 }
