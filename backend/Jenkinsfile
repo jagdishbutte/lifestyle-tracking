@@ -16,35 +16,6 @@ pipeline {
             }
         }
 
-        stage('Debug Java') {
-            steps {
-                sh '''
-                echo "===== WHOAMI ====="
-                whoami
-    
-                echo "===== PATH ====="
-                echo $PATH
-    
-                echo "===== JAVA_HOME ====="
-                echo $JAVA_HOME
-    
-                echo "===== WHICH JAVA ====="
-                which java
-    
-                echo "===== JAVA ====="
-                java -version
-    
-                echo "===== WHICH MVN ====="
-                which mvn
-    
-                echo "===== MAVEN ====="
-                mvn -version
-    
-                env | sort
-                '''
-            }
-        }
-
         stage('Build Jar') {
             steps {
                 dir('backend') {
