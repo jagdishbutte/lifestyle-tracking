@@ -9,6 +9,7 @@ import { getErrorMessage } from "../../utils/errorHandler";
 import type { DailyDietResponse, MealType } from "../../types/diet";
 
 import FoodSearchModal from "../diet/FoodSearchModal";
+import { useDashboardStore } from "../../store/dashboardStore";
 
 const MEALS: {
     title: string;
@@ -42,6 +43,7 @@ const QuickDietLogCard = () => {
     const [diet, setDiet] = useState<DailyDietResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [selectedMeal, setSelectedMeal] = useState<MealType | null>(null);
+    const { triggerRefresh } = useDashboardStore();
 
     const loadDiet = async () => {
         try {
@@ -51,6 +53,7 @@ const QuickDietLogCard = () => {
 
             if (response.success) {
                 setDiet(response.data);
+                triggerRefresh();
             }
         } catch (error) {
             toast.error(getErrorMessage(error));

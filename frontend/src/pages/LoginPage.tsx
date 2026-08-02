@@ -11,6 +11,7 @@ const LoginPage = () => {
         email: "",
         password: "",
     });
+    const [processing, setProcessing] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData((prev) => ({
@@ -25,6 +26,7 @@ const LoginPage = () => {
         e.preventDefault();
 
         try {
+            setProcessing(true);
             const response = await login(formData as LoginRequest);
 
             if (response.success) {
@@ -38,6 +40,8 @@ const LoginPage = () => {
             } else {
                 toast.error(getErrorMessage(error));
             }
+        } finally {
+            setProcessing(false);
         }
     };
 
@@ -98,7 +102,7 @@ const LoginPage = () => {
                         type="submit"
                         className="w-full rounded-xl bg-teal-500 py-3 font-medium text-white transition hover:bg-teal-600"
                     >
-                        Sign In
+                        {processing ? "Signing In..." : "Sign In"}
                     </button>
 
                     <div className="relative">
@@ -113,12 +117,12 @@ const LoginPage = () => {
                         </div>
                     </div>
 
-                    <button
+                    {/* <button
                         type="button"
                         className="w-full rounded-xl border border-slate-300 py-3 font-medium transition hover:bg-slate-50"
                     >
                         Continue with Google
-                    </button>
+                    </button> */}
 
                     <p className="text-center text-sm text-slate-600">
                         Don't have an account?{" "}

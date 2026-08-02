@@ -10,6 +10,7 @@ import QuickCheckInCard from "../components/dashboard/QuickCheckInCard";
 import QuickExpenseCard from "../components/dashboard/QuickExpenseCard";
 import QuickJournalCard from "../components/dashboard/QuickJournalCard";
 import StatCard from "../components/dashboard/StatCard";
+import { useDashboardStore } from "../store/dashboardStore";
 
 import { getDashboardSummary } from "../services/dashboardService";
 import { getErrorMessage } from "../utils/errorHandler";
@@ -19,6 +20,7 @@ import type { UserResponse } from "../types/profile";
 
 const DashboardPage = () => {
     const [user, setUser] = useState<UserResponse | null>(null);
+    const { statUpdate } = useDashboardStore();
     const [summary, setSummary] = useState<DashboardSummary>({
         sleepHours: 0,
         sleepGoalHours: 8,
@@ -46,7 +48,7 @@ const DashboardPage = () => {
             }
         };
         loadDashboard();
-    }, []);
+    }, [statUpdate]);
 
     useEffect(() => {
         getProfile().then((response) => {
@@ -88,16 +90,26 @@ const DashboardPage = () => {
         },
     ];
 
+    const hasStartedDay =
+        summary.sleepHours > 0 ||
+        summary.waterGlasses > 0 ||
+        summary.completedHabits > 0 ||
+        summary.caloriesConsumed > 0;
+
     return (
         <AppShell>
             <div>
-                <h1 className="text-3xl font-bold">Dashboard</h1>
+                <h1 className="text-3xl font-bold text-slate-900">
+                    Welcome back, {user?.firstName}! 👋
+                </h1>
 
                 <p className="mt-2 text-slate-600">
-                    Welcome back, {user?.firstName}
+                    {hasStartedDay
+                        ? "You're on track today. Keep it up!"
+                        : "Complete today's check-in to get started."}
                 </p>
 
-                <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+                <div className="mt-8 grid grid-cols-2 gap-6 xl:grid-cols-4">
                     {stats.map((stat) => (
                         <StatCard key={stat.title} {...stat} />
                     ))}
@@ -105,7 +117,10 @@ const DashboardPage = () => {
 
                 <div className="mt-8 grid gap-6 xl:grid-cols-2">
                     <QuickCheckInCard />
-                    <HabitTrackerCard />
+                    <HabitTrackerCard
+                        completedHabits={summary.completedHabits}
+                        totalHabits={summary.totalHabits}
+                    />
 
                     <QuickExpenseCard />
                     <QuickDietLogCard />

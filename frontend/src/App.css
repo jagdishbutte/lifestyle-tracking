@@ -1,0 +1,29 @@
+.slider {
+    background: linear-gradient(
+        to right,
+        #14b8a6 0%,
+        #14b8a6 calc(var(--value) * 1%),
+        #e2e8f0 calc(var(--value) * 1%),
+        #e2e8f0 100%
+    );
+}
+
+.slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 9999px;
+    background: white;
+    border: 3px solid #14b8a6;
+    box-shadow: 0 2px 8px rgba(20, 184, 166, 0.3);
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 9999px;
+    background: white;
+    border: 3px solid #14b8a6;
+    cursor: pointer;
+}

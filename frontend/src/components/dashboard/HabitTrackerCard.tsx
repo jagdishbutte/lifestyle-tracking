@@ -9,10 +9,20 @@ import {
     updateHabitCompletion,
 } from "../../services/habitService";
 import { useNavigate } from "react-router-dom";
+import { useDashboardStore } from "../../store/dashboardStore";
 
-const HabitTrackerCard = () => {
+interface HabitTrackerCardProps {
+    completedHabits: number;
+    totalHabits: number;
+}
+
+const HabitTrackerCard = ({
+    completedHabits,
+    totalHabits,
+}: HabitTrackerCardProps) => {
     const [habits, setHabits] = useState<HabitItem[]>([]);
     const navigate = useNavigate();
+    const { triggerRefresh } = useDashboardStore();
 
     useEffect(() => {
         const loadHabits = async () => {
@@ -65,15 +75,13 @@ const HabitTrackerCard = () => {
                             : h,
                     ),
                 );
-
+                triggerRefresh();
                 toast.success(response.message);
             }
         } catch (error) {
             toast.error(getErrorMessage(error));
         }
     };
-
-    const completedCount = 0;
 
     if (habits.length === 0) {
         return (
@@ -98,7 +106,7 @@ const HabitTrackerCard = () => {
                     <h2 className="text-xl font-semibold">Today's Habits</h2>
 
                     <p className="mt-1 text-sm text-slate-500">
-                        {completedCount}/{habits.length} completed
+                        {completedHabits}/{totalHabits} completed
                     </p>
                 </div>
 
@@ -133,17 +141,13 @@ const HabitTrackerCard = () => {
                         <button
                             type="button"
                             onClick={() => toggleHabit(habit)}
-                            className="flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-slate-100"
+                            className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-300
+                            ${habit.completed ? "bg-teal-500" : "bg-slate-300"}`}
                         >
-                            {habit.completed ? (
-                                <span className="text-2xl text-teal-600">
-                                    ✅
-                                </span>
-                            ) : (
-                                <span className="text-2xl text-slate-300">
-                                    ⬜
-                                </span>
-                            )}
+                            <span
+                                className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform duration-300
+                                ${habit.completed ? "translate-x-6" : "translate-x-1"}`}
+                            />
                         </button>
                     </div>
                 ))}

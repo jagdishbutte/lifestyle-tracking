@@ -13,6 +13,7 @@ const RegisterPage = () => {
         password: "",
         confirmPassword: "",
     });
+    const [processing, setProcessing] = useState(false);
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -34,6 +35,7 @@ const RegisterPage = () => {
         }
 
         try {
+            setProcessing(true);
             const request: RegisterRequest = {
                 firstName: formData.firstName,
                 lastName: formData.lastName,
@@ -50,6 +52,8 @@ const RegisterPage = () => {
             }
         } catch (error) {
             toast.error(getErrorMessage(error));
+        } finally {
+            setProcessing(false);
         }
     };
 
@@ -143,7 +147,8 @@ const RegisterPage = () => {
                         type="submit"
                         className="w-full rounded-xl bg-teal-500 py-3 font-medium text-white hover:bg-teal-600"
                     >
-                        Create Account
+                        
+                        {processing? "Creating Account...": "Create Account"}
                     </button>
 
                     <p className="text-center text-sm text-slate-600">
