@@ -1,6 +1,5 @@
 from fastapi import FastAPI
-from app.api.database import router as database_router
-from app.api.mongo import router as mongo_router
+from app.api.test import router as test_router
 from app.config import settings
 
 app = FastAPI(
@@ -8,8 +7,7 @@ app = FastAPI(
     version=settings.APP_VERSION,
 )
 
-app.include_router(database_router)
-app.include_router(mongo_router)
+app.include_router(test_router)
 
 @app.get("/")
 def home():
