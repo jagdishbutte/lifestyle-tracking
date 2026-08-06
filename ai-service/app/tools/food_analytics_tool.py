@@ -9,9 +9,9 @@ from app.models.runtime_context import RuntimeContext
 
 @tool(args_schema=FoodAnalyticsInput)
 def food_analytics_tool(
-    runtime: ToolRuntime[RuntimeContext],
     start_date: date,
     end_date: date, 
+    runtime: ToolRuntime[RuntimeContext],
 ) -> dict:
     """
     Retrieves food information of the current user.
@@ -50,8 +50,11 @@ def food_analytics_tool(
         rows = [dict(row._mapping) for row in result]
 
     return {
+        "tool": "food_analytics",
         "entries": rows,
         "total_entries": len(rows),
-        "start_date": start_date,
-        "end_date": end_date,
+        "date_range": {
+            "start_date": str(start_date),
+            "end_date": str(end_date),
+        },
     }

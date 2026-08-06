@@ -1,0 +1,144 @@
+# LifeTrack AI - A Lifestyle Intelligence Platform 
+
+## Overview
+
+LifeTrack AI is an AI-powered personal lifestyle management system that helps users build healthier habits, improve productivity, monitor nutrition, track expenses, and maintain personal journals. The platform combines structured user data with Artificial Intelligence to generate personalized insights and recommendations.
+
+The platform focuses on long-term lifestyle improvement by helping users understand their own patterns rather than providing generic advice.
+
+---
+
+## Core Modules
+
+### Dashboard
+
+The dashboard is the central place where users can monitor their daily progress.
+
+It displays:
+
+- Daily Check-in metrics
+- Habit progress
+- Nutrition summary
+- Expense summary
+- AI Insights
+- AI Improvement Suggestions
+
+The dashboard automatically updates whenever user data changes.
+
+---
+
+## Daily Check-in
+
+Users can record:
+
+- Sleep hours
+- Water intake
+- Steps walked
+- Daily mood
+
+These records are used to generate AI insights and wellness trends.
+
+---
+
+## Habit Tracker
+
+Users can:
+
+- Create habits
+- Mark habits as completed
+- Track consistency
+- View completion history
+
+AI uses habit history to identify patterns and suggest improvements.
+
+---
+
+## Nutrition Tracker
+
+Users can log every meal they consume.
+
+Each food entry contains:
+
+- Food name
+- Meal type
+- Quantity consumed
+- Calories consumed
+
+AI analyses eating habits, meal frequency and calorie trends.
+
+---
+
+## Expense Tracker
+
+Users can record daily expenses.
+
+Each expense includes:
+
+- Title
+- Category
+- Amount
+- Date
+
+AI analyses spending behaviour and identifies unnecessary expenses and financial patterns.
+
+---
+
+## Journal
+
+Users can write personal journal entries.
+
+Journal entries are private.
+
+The AI can analyse journal history to understand emotional trends, recurring topics and behavioural changes.
+
+In future versions, journal retrieval will use Retrieval-Augmented Generation (RAG).
+
+---
+
+## AI Dashboard Insights
+
+The dashboard automatically generates AI insights.
+
+Insights are generated using approximately the previous seven days of user activity.
+
+Examples include:
+
+- Sleep consistency
+- Water intake trends
+- Habit completion patterns
+- Nutrition observations
+- Spending behaviour
+
+The AI also provides actionable improvement suggestions.
+
+---
+
+## AI Lifestyle Coach
+
+The platform includes an AI-powered chat assistant.
+
+The assistant can answer questions related to:
+
+- User habits
+- Nutrition
+- Expenses
+- Check-ins
+- Journal entries
+- Lifestyle trends
+- Platform features
+
+The assistant answers using the user's own data whenever possible.
+
+It does not fabricate user information.
+
+---
+
+## Privacy
+
+Each user can only access their own data.
+
+The AI service receives the authenticated user's ID from the backend.
+
+All analytics tools automatically filter records using this user ID.
+
+The AI never accesses another user's information.

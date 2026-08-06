@@ -5,7 +5,6 @@ from app.database.collections import dashboard_summaries
 from app.services.database_service import test_connection
 from app.services.llm_service import llm_with_tools
 from app.tools.food_analytics_tool import food_analytics_tool
-from app.services.agent_service import agent
 
 router = APIRouter(
     prefix="/test",
