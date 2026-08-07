@@ -11,6 +11,10 @@ public class AiChatRequest {
 
 	@JsonProperty("user_id")
     private Long userId;
+    
+    @JsonProperty("session_id")
+    private String sessionId;
+    
     private String question;
 
 }

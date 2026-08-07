@@ -7,11 +7,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ChatRequest {
+public class ChatSessionItemResponse {
 
-    private String question;
-    
-    @JsonProperty("session_id")
+	@JsonProperty("session_id")
     private String sessionId;
+
+    private String title;
 
 }
