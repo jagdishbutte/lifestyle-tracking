@@ -10,9 +10,9 @@ import DietPage from "./pages/DietPage";
 import ExpensesPage from "./pages/ExpensesPage";
 import JournalPage from "./pages/JournalPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
-import AiAssistantPage from "./pages/AiAssistantPage";
 import ProfilePage from "./pages/ProfilePage";
 import { useAuthStore } from "./store/authStore";
+import ChatPage from "./pages/ChatPage";
 
 function App() {
     const token = useAuthStore((state) => state.token);
@@ -35,7 +35,7 @@ function App() {
                 <Route path="/expenses" element={protect(<ExpensesPage />)} />
                 <Route path="/journal" element={protect(<JournalPage />)} />
                 <Route path="/analytics" element={protect(<AnalyticsPage />)} />
-                <Route path="/ai" element={protect(<AiAssistantPage />)} />
+                <Route path="/chat" element={protect(<ChatPage />)} />
                 <Route path="/profile" element={protect(<ProfilePage />)} />
 
                 <Route path="*" element={<NotFoundPage />} />

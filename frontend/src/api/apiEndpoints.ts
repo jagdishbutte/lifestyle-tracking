@@ -49,3 +49,11 @@ export const JOURNAL_API = {
 export const PROFILE_API = {
     BASE: "/api/users",
 };
+
+export const CHAT_API = {
+    CHAT: "/api/ai/chat",
+    HISTORY: "/api/ai/history",
+    HISTORY_BY_ID: (sessionId: string) => `/api/ai/history/${sessionId}`,
+    UPDATE_TITLE: (sessionId: string) => `/api/ai/history/${sessionId}/title`,
+    DELETE: (sessionId: string) =>`/api/ai/chat/${sessionId}`,
+};

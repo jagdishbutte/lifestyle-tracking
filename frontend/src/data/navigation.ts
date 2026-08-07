@@ -62,7 +62,7 @@ export const navigationGroups: NavigationGroup[] = [
             },
             {
                 label: "AI Assistant",
-                path: "/ai",
+                path: "/chat",
             },
         ],
     },
