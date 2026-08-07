@@ -1,5 +1,8 @@
-from pymongo import MongoClient
+from motor.motor_asyncio import AsyncIOMotorClient
 from app.config import settings
 
-client = MongoClient(settings.MONGO_URI)
+client = AsyncIOMotorClient(settings.MONGO_URI)
 database = client[settings.MONGO_DATABASE]
+
+test_logs = database["test_logs"]
+chat_sessions = database["chat_sessions"]

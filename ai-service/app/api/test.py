@@ -1,7 +1,6 @@
 from fastapi import APIRouter
-from app.models.runtime_context import RuntimeContext
 
-from app.database.collections import dashboard_summaries
+from app.database.mongo import test_logs
 from app.services.database_service import test_connection
 from app.services.llm_service import llm_with_tools
 from app.tools.food_analytics_tool import food_analytics_tool
@@ -21,7 +20,7 @@ def database_test():
 @router.get("/mongo")
 def mongo_test():
 
-    dashboard_summaries.insert_one({
+    test_logs.insert_one({
         "test": "working"
     })
 
