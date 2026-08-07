@@ -12,6 +12,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.http.codec.ServerSentEvent;
 import reactor.core.publisher.Flux;
 
 @Component
@@ -23,18 +24,18 @@ public class AiServiceClient {
     @Value("${ai.service.base-url}")
     private String aiServiceBaseUrl;
 
-    public Flux<String> streamChat(AiChatRequest request) {
+    public Flux<ServerSentEvent<String>> streamChat(AiChatRequest request) {
 
-    	return webClientBuilder
-    	        .baseUrl(aiServiceBaseUrl)
-    	        .build()
-    	        .post()
-    	        .uri("/chat/stream")
-    	        .contentType(MediaType.APPLICATION_JSON)
-    	        .accept(MediaType.TEXT_EVENT_STREAM)
-    	        .bodyValue(request)
-    	        .retrieve()
-    	        .bodyToFlux(String.class);
+        return webClientBuilder
+                .baseUrl(aiServiceBaseUrl)
+                .build()
+                .post()
+                .uri("/chat/stream")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.TEXT_EVENT_STREAM)
+                .bodyValue(request)
+                .retrieve()
+                .bodyToFlux(new ParameterizedTypeReference<ServerSentEvent<String>>() {});
     }
     
     public ApiResponse<ChatSessionsListResponse> getHistory(Long userId) {

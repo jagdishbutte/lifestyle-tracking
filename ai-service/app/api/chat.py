@@ -43,7 +43,7 @@ async def generate_stream(request: ChatRequest):
     {memory if memory else "No previous conversation."}
     """
 
-    print("system_prompt", system_prompt)
+    # print("system_prompt", system_prompt)
 
     try:
         for message, metadata in agent.stream(
@@ -87,7 +87,7 @@ async def generate_stream(request: ChatRequest):
             ai_message=ai_response,
         )
 
-        print(summary)
+        # print(summary)
         session_id = await append_chat(
             user_id=request.user_id,
             session_id=request.session_id,
@@ -114,7 +114,7 @@ async def generate_stream(request: ChatRequest):
 
 
 @router.post("/stream")
-def stream_chat(request: ChatRequest):
+async def stream_chat(request: ChatRequest):
 
     return StreamingResponse(
         generate_stream(request),

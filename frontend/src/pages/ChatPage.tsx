@@ -7,6 +7,8 @@ import ChatWindow from "../components/chat/ChatWindow";
 import ChatInput from "../components/chat/ChatInput";
 
 import type { ChatHistoryItem, ChatSession } from "../types/chat";
+import { streamChat } from "../services/chatService";
+import toast from "react-hot-toast";
 
 const ChatPage = () => {
     const [question, setQuestion] = useState("");
@@ -24,7 +26,67 @@ const ChatPage = () => {
         };
     }, [sidebarOpen]);
 
-    const handleAskAI = () => {};
+    const handleAskAI = async () => {
+        if (!question.trim() || loading) {
+            return;
+        }
+
+        
+
+        const userQuestion = question;
+
+        setQuestion("");
+        setLoading(true);
+        setMessages((prev) => [
+            ...prev,
+            {
+                role: "user",
+                content: userQuestion,
+            },
+            {
+                role: "assistant",
+                content: "",
+            },
+        ]);
+
+        try {
+            await streamChat(
+                {
+                    question: userQuestion,
+                    sessionId,
+                },
+                (token) => {
+                    // console.log(token);
+                    setMessages((prev) => {
+                        const updated = [...prev];
+
+                        updated[updated.length - 1] = {
+                            ...updated[updated.length - 1],
+                            content:
+                                updated[updated.length - 1].content + token,
+                        };
+
+                        return updated;
+                    });
+                },
+
+                // Stream completed
+                (newSessionId) => {
+                    // console.log("New Session:", newSessionId);
+                    setSessionId(newSessionId);
+                },
+
+                // Error
+                (message) => {
+                    toast.error(message);
+                },
+            );
+        } catch (error) {
+            toast.error("Failed to get AI response.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleNewChat = () => {
         setSessionId(null);

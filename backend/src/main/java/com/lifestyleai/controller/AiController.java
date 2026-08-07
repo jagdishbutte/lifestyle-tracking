@@ -6,7 +6,6 @@ import com.lifestyleai.dto.ai.ChatSessionsListResponse;
 import com.lifestyleai.dto.ai.UpdateChatTitleRequest;
 import com.lifestyleai.dto.common.ApiResponse;
 import com.lifestyleai.service.AiChatService;
-import com.lifestyleai.service.common.UserHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -17,22 +16,30 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 public class AiController {
 
     private final AiChatService aiChatService;
-    private final UserHelper userHelper;
 
     @PostMapping("/chat")
-    public SseEmitter chat( @RequestBody ChatRequest request
+    public SseEmitter chat(
+            @RequestBody ChatRequest request
     ) {
 
-    	Long userId = userHelper.getCurrentUserId();
         SseEmitter emitter = new SseEmitter(0L);
 
         aiChatService
-                .streamChat(userId, request.getQuestion(), request.getSessionId())
-                .subscribe(data -> {
+                .streamChat(
+                        request.getQuestion(),
+                        request.getSessionId()
+                )
+                .subscribe(
+                        event -> {
                             try {
-                                emitter.send(data);
-                            }
-                            catch (Exception ex) {
+
+                                emitter.send(
+                                        SseEmitter.event()
+                                                .name(event.event())
+                                                .data(event.data())
+                                );
+
+                            } catch (Exception ex) {
                                 emitter.completeWithError(ex);
                             }
                         },

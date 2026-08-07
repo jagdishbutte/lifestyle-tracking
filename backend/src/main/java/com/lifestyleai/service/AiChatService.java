@@ -10,6 +10,7 @@ import com.lifestyleai.service.common.UserHelper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.http.codec.ServerSentEvent;
 import reactor.core.publisher.Flux;
 
 @Service
@@ -19,13 +20,18 @@ public class AiChatService {
     private final AiServiceClient aiServiceClient;
     private final UserHelper userHelper;
 
-    public Flux<String> streamChat(Long userId, String question, String sessionId) {
+    public Flux<ServerSentEvent<String>> streamChat(
+            String question,
+            String sessionId
+    ) {
 
         AiChatRequest request = new AiChatRequest(
-                userId,
+        		userHelper.getCurrentUserId(),
                 question,
                 sessionId
         );
+        
+        System.out.print(request + "catching the request");
 
         return aiServiceClient.streamChat(request);
     }
