@@ -20,6 +20,13 @@ export const getChatHistory = async (): Promise<
             CHAT_API.HISTORY
         );
 
+    response.data.data.sessions = response.data.data.sessions.map(
+        (session: any) => ({
+            sessionId: session.session_id,
+            title: session.title,
+        })
+    );
+
     return response.data;
 };
 

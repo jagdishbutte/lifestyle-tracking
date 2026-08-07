@@ -1,8 +1,26 @@
+import ChatHistoryItem from "./ChatHistoryItem";
+
+import type { ChatSession } from "../../types/chat";
+
 type ChatSidebarProps = {
+    sessions: ChatSession[];
+    currentSessionId: string | null;
+
     onNewChat: () => void;
+    onSelectChat: (sessionId: string) => void;
+    onRenameChat: (sessionId: string, title: string) => Promise<void>;
+    onDeleteChat: (sessionId: string) => Promise<void>;
 };
 
-const ChatSidebar = ({ onNewChat }: ChatSidebarProps) => {
+const ChatSidebar = ({
+    sessions,
+    currentSessionId,
+    onNewChat,
+    onSelectChat,
+    onRenameChat,
+    onDeleteChat,
+}: ChatSidebarProps) => {
+    console.log(sessions)
     return (
         <div className="flex h-full w-full flex-col bg-white">
             {/* Header */}
@@ -22,17 +40,23 @@ const ChatSidebar = ({ onNewChat }: ChatSidebarProps) => {
                 </p>
 
                 <div className="space-y-2">
-                    <button className="w-full rounded-xl px-3 py-3 text-left text-slate-700 transition hover:bg-slate-100">
-                        How healthy am I this week?
-                    </button>
-
-                    <button className="w-full rounded-xl px-3 py-3 text-left text-slate-700 transition hover:bg-slate-100">
-                        Analyze my expenses
-                    </button>
-
-                    <button className="w-full rounded-xl px-3 py-3 text-left text-slate-700 transition hover:bg-slate-100">
-                        Improve my sleep
-                    </button>
+                    {sessions?.length === 0 ? (
+                        <p className="px-2 py-4 text-sm text-slate-400">
+                            No conversations yet
+                        </p>
+                    ) : (
+                        sessions?.map((session) => (
+                            <ChatHistoryItem
+                                key={session.sessionId}
+                                sessionId={session.sessionId}
+                                title={session.title}
+                                active={currentSessionId === session.sessionId}
+                                onClick={() => onSelectChat(session.sessionId)}
+                                onRename={onRenameChat}
+                                onDelete={onDeleteChat}
+                            />
+                        ))
+                    )}
                 </div>
             </div>
         </div>

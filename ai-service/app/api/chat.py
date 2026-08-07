@@ -171,15 +171,22 @@ async def delete_chat(
     session_id: str,
 ):
 
-    await delete_history(
+    deleted_count = await delete_history(
         user_id=user_id,
         session_id=session_id,
     )
 
+    if deleted_count == 0:
+        return ApiResponse(
+            success=False,
+            message="Chat not found.",
+            data=None,
+        )
+
     return ApiResponse(
         success=True,
-        message="History retrieved successfully.",
-        data=await get_history(user_id),
+        message="Chat deleted successfully.",
+        data="Chat deleted successfully.",
     )
 
 @router.put("/history/{user_id}/{session_id}/title")
@@ -189,11 +196,18 @@ async def update_chat_title(
     request: UpdateTitleRequest,
 ):
 
-    await update_title(
+    updated_count = await update_title(
         user_id=user_id,
         session_id=session_id,
         title=request.title,
     )
+
+    if updated_count == 0:
+            return ApiResponse(
+                success=False,
+                message="Chat not found.",
+                data=None,
+            )
 
     return ApiResponse(
         success=True,

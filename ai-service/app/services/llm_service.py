@@ -4,8 +4,8 @@ from app.config import settings
 from app.tools.food_analytics_tool import food_analytics_tool
 
 llm = ChatGroq(
-    model="llama-3.1-8b-instant",
-    # model="openai/gpt-oss-120b",
+    # model="llama-3.1-8b-instant",
+    model="openai/gpt-oss-120b",
     temperature= 0.4,
     api_key=settings.GROQ_API_KEY
 )

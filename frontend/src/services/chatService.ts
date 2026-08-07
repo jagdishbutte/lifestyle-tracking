@@ -69,6 +69,7 @@ export const streamChat = async (
                 case "done":
                     onDone(json.session_id);
                     // console.log(json.session_id)
+                    // await loadChatHistory();
                     break;
 
                 case "error":

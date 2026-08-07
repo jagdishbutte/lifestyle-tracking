@@ -133,23 +133,25 @@ async def get_history(
 async def delete_history(
     user_id: int,
     session_id: str,
-):
+) -> int:
 
-    await chat_sessions.delete_one(
+    result = await chat_sessions.delete_one(
         {
             "user_id": user_id,
             "session_id": session_id,
         }
     )
 
+    return result.deleted_count
+
 
 async def update_title(
     user_id: int,
     session_id: str,
     title: str,
-):
+) -> int:
 
-    await chat_sessions.update_one(
+    result = await chat_sessions.update_one(
         {
             "user_id": user_id,
             "session_id": session_id,
@@ -161,3 +163,5 @@ async def update_title(
             }
         },
     )
+
+    return result.modified_count

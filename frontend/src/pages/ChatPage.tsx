@@ -9,6 +9,12 @@ import ChatInput from "../components/chat/ChatInput";
 import type { ChatHistoryItem, ChatSession } from "../types/chat";
 import { streamChat } from "../services/chatService";
 import toast from "react-hot-toast";
+import {
+    deleteChat,
+    getChatById,
+    getChatHistory,
+    updateChatTitle,
+} from "../services/aiService";
 
 const ChatPage = () => {
     const [question, setQuestion] = useState("");
@@ -30,9 +36,6 @@ const ChatPage = () => {
         if (!question.trim() || loading) {
             return;
         }
-
-        
-
         const userQuestion = question;
 
         setQuestion("");
@@ -85,6 +88,67 @@ const ChatPage = () => {
             toast.error("Failed to get AI response.");
         } finally {
             setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        loadChatHistory();
+    }, []);
+
+    const loadChatHistory = async () => {
+        try {
+            const response = await getChatHistory();
+
+            if (response.success) {
+                setSessions(response.data.sessions);
+            }
+        } catch (error) {
+            toast.error("Failed to load chat history.");
+        }
+    };
+
+    const handleRenameChat = async (sessionId: string, title: string) => {
+        const response = await updateChatTitle(sessionId, { title });
+
+        if (!response.success) return;
+
+        setSessions((prev) =>
+            prev.map((session) =>
+                session.sessionId === sessionId
+                    ? {
+                          ...session,
+                          title,
+                      }
+                    : session,
+            ),
+        );
+    };
+
+    const handleDeleteChat = async (deletedSessionId: string) => {
+        const response = await deleteChat(deletedSessionId);
+
+        if (!response.success) return;
+
+        setSessions((prev) =>
+            prev.filter((session) => session.sessionId !== deletedSessionId),
+        );
+
+        if (sessionId === deletedSessionId) {
+            handleNewChat();
+        }
+    };
+
+    const handleSelectChat = async (selectedSessionId: string) => {
+        try {
+            console.log(selectedSessionId)
+            const response = await getChatById(selectedSessionId);
+
+            if (!response.success) return;
+
+            setMessages(response.data.messages);
+            setSessionId(response.data.sessionId);
+        } catch {
+            toast.error("Failed to load chat.");
         }
     };
 
@@ -155,7 +219,14 @@ const ChatPage = () => {
                     </div>
 
                     <div className="min-h-0 flex-1 overflow-y-auto">
-                        <ChatSidebar onNewChat={handleNewChat} />
+                        <ChatSidebar
+                            sessions={sessions}
+                            currentSessionId={sessionId}
+                            onNewChat={handleNewChat}
+                            onSelectChat={handleSelectChat}
+                            onRenameChat={handleRenameChat}
+                            onDeleteChat={handleDeleteChat}
+                        />
                     </div>
                 </div>
 
@@ -175,7 +246,14 @@ const ChatPage = () => {
                         </div>
 
                         <div className="min-h-0 flex-1 overflow-y-auto">
-                            <ChatSidebar onNewChat={handleNewChat} />
+                            <ChatSidebar
+                                sessions={sessions}
+                                currentSessionId={sessionId}
+                                onNewChat={handleNewChat}
+                                onSelectChat={handleSelectChat}
+                                onRenameChat={handleRenameChat}
+                                onDeleteChat={handleDeleteChat}
+                            />
                         </div>
                     </div>
                 )}
