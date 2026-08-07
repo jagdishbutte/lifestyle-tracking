@@ -1,6 +1,7 @@
 package com.lifestyleai.security;
 
 import lombok.RequiredArgsConstructor;
+import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,6 +37,12 @@ public class SecurityConfig {
 
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
+                		
+                		.dispatcherTypeMatchers(
+                                DispatcherType.ASYNC,
+                                DispatcherType.ERROR,
+                                DispatcherType.FORWARD
+                        ).permitAll()
 
                         // Authentication
                         .requestMatchers("/api/auth/**")
