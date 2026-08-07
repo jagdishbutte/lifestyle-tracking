@@ -3,7 +3,7 @@ from fastapi.responses import StreamingResponse
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 import json
 
-from app.models.chat_models import ChatRequest
+from app.models.chat_models import ChatRequest, UpdateTitleRequest, ApiResponse
 from app.models.chat_models import RuntimeContext
 from app.services.agent_service import agent
 from app.services.chat_summary_service import generate_summary
@@ -11,6 +11,12 @@ from app.prompts.system_prompt import SYSTEM_PROMPT
 from app.services.chat_history_service import (
     append_chat,
     get_summary,
+)
+from app.services.chat_history_service import (
+    get_history,
+    get_session,
+    delete_history,
+    update_title
 )
 
 router = APIRouter(
@@ -118,4 +124,79 @@ def stream_chat(request: ChatRequest):
             "Connection": "keep-alive",
             "X-Accel-Buffering": "no",
         },
+    )
+
+
+@router.get("/history/{user_id}")
+async def history(
+    user_id: int,
+):
+
+    return ApiResponse(
+        success=True,
+        message="Chat sessions retrieved successfully.",
+        data=await get_history(user_id),
+    )
+
+
+@router.get("/history/{user_id}/{session_id}")
+async def history_by_id(
+    user_id: int,
+    session_id: str,
+):
+
+    session = await get_session(
+        user_id=user_id,
+        session_id=session_id,
+    )
+
+    if session is None:
+        return {}
+
+    session.pop("summary", None)
+    session.pop("user_id", None)
+    session.pop("_id", None)
+    session.pop("created_at", None)
+    session.pop("updated_at", None)
+
+    return ApiResponse(
+        success=True,
+        message="Chat history retrieved successfully.",
+        data=session,
+    )
+
+@router.delete("/history/{user_id}/{session_id}")
+async def delete_chat(
+    user_id: int,
+    session_id: str,
+):
+
+    await delete_history(
+        user_id=user_id,
+        session_id=session_id,
+    )
+
+    return ApiResponse(
+        success=True,
+        message="History retrieved successfully.",
+        data=await get_history(user_id),
+    )
+
+@router.put("/history/{user_id}/{session_id}/title")
+async def update_chat_title(
+    user_id: int,
+    session_id: str,
+    request: UpdateTitleRequest,
+):
+
+    await update_title(
+        user_id=user_id,
+        session_id=session_id,
+        title=request.title,
+    )
+
+    return ApiResponse(
+        success=True,
+        message="Title updated successfully.",
+        data=request.title,
     )

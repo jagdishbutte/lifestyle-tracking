@@ -1,9 +1,17 @@
 from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, Field
+from typing import Generic, TypeVar
 
 from app.utils.datetime_utils import now
 
+T = TypeVar("T")
+
+
+class ApiResponse(BaseModel, Generic[T]):
+    success: bool
+    message: str
+    data: T | None = None
 
 class ChatRequest(BaseModel):
     user_id: int
@@ -13,6 +21,8 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     response: str
 
+class UpdateTitleRequest(BaseModel):
+    title: str
 
 class RuntimeContext(BaseModel):
     user_id: int

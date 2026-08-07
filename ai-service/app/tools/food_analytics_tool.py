@@ -5,7 +5,7 @@ from langchain.tools import tool, ToolRuntime
 
 from app.database.mysql import engine
 from app.models.tool_models import FoodAnalyticsInput
-from app.models.runtime_context import RuntimeContext
+from app.models.chat_models import RuntimeContext
 
 @tool(args_schema=FoodAnalyticsInput)
 def food_analytics_tool(

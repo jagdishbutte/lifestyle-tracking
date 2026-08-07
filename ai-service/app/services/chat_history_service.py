@@ -72,11 +72,13 @@ async def append_chat(
 
 
 async def get_session(
+    user_id: int,
     session_id: str,
 ) -> dict | None:
 
     return await chat_sessions.find_one(
         {
+            "user_id": user_id,
             "session_id": session_id,
         }
     )
@@ -103,3 +105,59 @@ async def get_summary(
         return []
 
     return session.get("summary", [])
+
+
+async def get_history(
+    user_id: int,
+):
+
+    sessions = await chat_sessions.find(
+        {
+            "user_id": user_id,
+        },
+        {
+            "_id": 0,
+            "session_id": 1,
+            "title": 1,
+        },
+    ).sort(
+        "updated_at",
+        -1,
+    ).to_list(None)
+
+    return {
+        "sessions": sessions,
+    }
+
+
+async def delete_history(
+    user_id: int,
+    session_id: str,
+):
+
+    await chat_sessions.delete_one(
+        {
+            "user_id": user_id,
+            "session_id": session_id,
+        }
+    )
+
+
+async def update_title(
+    user_id: int,
+    session_id: str,
+    title: str,
+):
+
+    await chat_sessions.update_one(
+        {
+            "user_id": user_id,
+            "session_id": session_id,
+        },
+        {
+            "$set": {
+                "title": title,
+                "updated_at": now(),
+            }
+        },
+    )

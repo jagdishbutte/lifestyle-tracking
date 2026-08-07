@@ -4,7 +4,7 @@ from langchain.tools import ToolRuntime, tool
 from sqlalchemy import text
 
 from app.database.mysql import engine
-from app.models.runtime_context import RuntimeContext
+from app.models.chat_models import RuntimeContext
 from app.models.tool_models import JournalAnalyticsInput
 
 
