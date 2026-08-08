@@ -191,13 +191,13 @@ const ChatPage = () => {
         <AppShell>
             <div className="relative flex h-[calc(100vh-7rem)] overflow-hidden rounded-xl bg-slate-50">
                 {/* Main */}
-                <div className="flex min-w-0 flex-1 flex-col">
-                    <div className="flex h-14 shrink-0 items-center justify-end px-3">
+                <div className="relative flex min-w-0 flex-1 flex-col">
+                    <div className="flex h-14 shrink-0 items-center justify-end px-3 sm:absolute sm:right-3 sm:top-3 sm:z-10 sm:h-auto sm:px-0">
                         {!sidebarOpen && (
                             <button
                                 onClick={() => setSidebarOpen(true)}
                                 aria-label="Open chat history"
-                                className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-100 active:bg-slate-200"
+                                className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-100 active:bg-slate-200"
                             >
                                 <PanelRightOpen size={20} />
                             </button>
