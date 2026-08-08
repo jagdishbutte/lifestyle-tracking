@@ -35,8 +35,10 @@ const ExpenseCard = ({ expense, onEdit, onDelete }: ExpenseCardProps) => {
                         <>
                             <span>•</span>
 
-                            <span className="truncate">
-                                {expense.description}
+                            <span>
+                                {expense.description.length > 15
+                                    ? `${expense.description.slice(0, 15)}...`
+                                    : expense.description}
                             </span>
                         </>
                     )}

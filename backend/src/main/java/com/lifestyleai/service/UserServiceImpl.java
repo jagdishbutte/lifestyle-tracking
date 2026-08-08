@@ -19,7 +19,7 @@ import com.lifestyleai.dto.user.UpdateProfileRequest;
 import com.lifestyleai.dto.user.UserResponse;
 import com.lifestyleai.entity.User;
 import com.lifestyleai.enums.user.UserRole;
-import com.lifestyleai.exception.BadCredentialsException;
+import com.lifestyleai.exception.EmailAlreadyExistsException;
 import com.lifestyleai.repository.UserRepository;
 import com.lifestyleai.security.CustomUserDetails;
 import com.lifestyleai.security.JwtService;
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 	public UserResponse register(RegisterRequest request) {
 
 	    if (userRepository.existsByEmail(request.getEmail())) {
-	        throw new BadCredentialsException("Email already exists.");
+	    	throw new EmailAlreadyExistsException("Email already exists.");
 	    }
 
 	    User user = mapper.map(request, User.class);
