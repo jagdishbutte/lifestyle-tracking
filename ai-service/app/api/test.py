@@ -18,9 +18,9 @@ def database_test():
     }
 
 @router.get("/mongo")
-def mongo_test():
+async def mongo_test():
 
-    test_logs.insert_one({
+    await test_logs.insert_one({
         "test": "working"
     })
 
