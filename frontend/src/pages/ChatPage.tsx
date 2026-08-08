@@ -6,7 +6,7 @@ import ChatSidebar from "../components/chat/ChatSidebar";
 import ChatWindow from "../components/chat/ChatWindow";
 import ChatInput from "../components/chat/ChatInput";
 
-import type { ChatHistoryItem, ChatSession } from "../types/chat";
+import type { ChatHistoryItem } from "../types/chat";
 import { streamChat } from "../services/chatService";
 import toast from "react-hot-toast";
 import {
@@ -15,14 +15,22 @@ import {
     getChatHistory,
     updateChatTitle,
 } from "../services/aiService";
+import { useChatStore } from "../store/chatStore";
 
 const ChatPage = () => {
     const [question, setQuestion] = useState("");
     const [loading, setLoading] = useState(false);
-    const [sessionId, setSessionId] = useState<string | null>(null);
     const [messages, setMessages] = useState<ChatHistoryItem[]>([]);
-    const [sessions, setSessions] = useState<ChatSession[]>([]);
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const {
+        sessions,
+        currentSessionId,
+        setSessions,
+        addSession,
+        setCurrentSession,
+        updateSessionName,
+        deleteSession,
+    } = useChatStore();
 
     useEffect(() => {
         document.body.style.overflow = sidebarOpen ? "hidden" : "";
@@ -36,10 +44,14 @@ const ChatPage = () => {
         if (!question.trim() || loading) {
             return;
         }
+
         const userQuestion = question;
+        const sessionIdForRequest = currentSessionId;
+        const isNewChat = !sessionIdForRequest;
 
         setQuestion("");
         setLoading(true);
+
         setMessages((prev) => [
             ...prev,
             {
@@ -56,10 +68,11 @@ const ChatPage = () => {
             await streamChat(
                 {
                     question: userQuestion,
-                    sessionId,
+                    sessionId: sessionIdForRequest,
                 },
+
+                // Token
                 (token) => {
-                    // console.log(token);
                     setMessages((prev) => {
                         const updated = [...prev];
 
@@ -73,10 +86,20 @@ const ChatPage = () => {
                     });
                 },
 
-                // Stream completed
+                // Done
                 (newSessionId) => {
-                    // console.log("New Session:", newSessionId);
-                    setSessionId(newSessionId);
+                    console.log("REQUEST SESSION:", sessionIdForRequest);
+                    console.log("NEW SESSION:", newSessionId);
+                    console.log("IS NEW CHAT:", isNewChat);
+
+                    setCurrentSession(newSessionId);
+
+                    if (isNewChat) {
+                        addSession({
+                            sessionId: newSessionId,
+                            title: userQuestion,
+                        });
+                    }
                 },
 
                 // Error
@@ -108,52 +131,53 @@ const ChatPage = () => {
     };
 
     const handleRenameChat = async (sessionId: string, title: string) => {
-        const response = await updateChatTitle(sessionId, { title });
+        try {
+            const response = await updateChatTitle(sessionId, { title });
 
-        if (!response.success) return;
+            if (!response.success) return;
 
-        setSessions((prev) =>
-            prev.map((session) =>
-                session.sessionId === sessionId
-                    ? {
-                          ...session,
-                          title,
-                      }
-                    : session,
-            ),
-        );
+            updateSessionName(sessionId, title);
+        } catch (error) {
+            toast.error("Failed to rename chat.");
+        }
     };
 
     const handleDeleteChat = async (deletedSessionId: string) => {
-        const response = await deleteChat(deletedSessionId);
+        try {
+            const response = await deleteChat(deletedSessionId);
 
-        if (!response.success) return;
+            if (!response.success) return;
 
-        setSessions((prev) =>
-            prev.filter((session) => session.sessionId !== deletedSessionId),
-        );
+            deleteSession(deletedSessionId);
 
-        if (sessionId === deletedSessionId) {
-            handleNewChat();
+            if (currentSessionId === deletedSessionId) {
+                handleNewChat();
+            }
+        } catch (error) {
+            toast.error("Failed to delete chat.");
         }
     };
 
     const handleSelectChat = async (selectedSessionId: string) => {
         try {
-            console.log(selectedSessionId)
+            console.log("SELECTED:", selectedSessionId);
+
             const response = await getChatById(selectedSessionId);
 
             if (!response.success) return;
 
+            console.log("CHAT RESPONSE:", response.data);
+            console.log("SESSION ID:", response.data.sessionId);
+
             setMessages(response.data.messages);
-            setSessionId(response.data.sessionId);
-        } catch {
+            setCurrentSession(response.data.sessionId);
+        } catch (error) {
             toast.error("Failed to load chat.");
         }
     };
 
     const handleNewChat = () => {
-        setSessionId(null);
+        setCurrentSession(null);
         setMessages([]);
         setQuestion("");
         setSidebarOpen(false);
@@ -221,7 +245,7 @@ const ChatPage = () => {
                     <div className="min-h-0 flex-1 overflow-y-auto">
                         <ChatSidebar
                             sessions={sessions}
-                            currentSessionId={sessionId}
+                            currentSessionId={currentSessionId}
                             onNewChat={handleNewChat}
                             onSelectChat={handleSelectChat}
                             onRenameChat={handleRenameChat}
@@ -248,7 +272,7 @@ const ChatPage = () => {
                         <div className="min-h-0 flex-1 overflow-y-auto">
                             <ChatSidebar
                                 sessions={sessions}
-                                currentSessionId={sessionId}
+                                currentSessionId={currentSessionId}
                                 onNewChat={handleNewChat}
                                 onSelectChat={handleSelectChat}
                                 onRenameChat={handleRenameChat}

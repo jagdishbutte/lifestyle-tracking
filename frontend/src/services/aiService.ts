@@ -33,12 +33,20 @@ export const getChatHistory = async (): Promise<
 export const getChatById = async (
     sessionId: string
 ): Promise<ApiResponse<ChatHistory>> => {
-
     const response =
         await apiConnector<ApiResponse<ChatHistory>>(
             "GET",
             CHAT_API.HISTORY_BY_ID(sessionId)
         );
+
+    const data = response.data.data as ChatHistory & {
+        session_id: string;
+    };
+
+    response.data.data = {
+        ...data,
+        sessionId: data.session_id,
+    };
 
     return response.data;
 };

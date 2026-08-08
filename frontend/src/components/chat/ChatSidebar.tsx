@@ -20,7 +20,7 @@ const ChatSidebar = ({
     onRenameChat,
     onDeleteChat,
 }: ChatSidebarProps) => {
-    console.log(sessions)
+    // console.log(sessions)
     return (
         <div className="flex h-full w-full flex-col bg-white">
             {/* Header */}
