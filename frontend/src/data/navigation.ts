@@ -56,10 +56,10 @@ export const navigationGroups: NavigationGroup[] = [
     {
         title: "Insights",
         items: [
-            {
-                label: "Analytics",
-                path: "/analytics",
-            },
+            // {
+            //     label: "Analytics",
+            //     path: "/analytics",
+            // },
             {
                 label: "AI Assistant",
                 path: "/chat",

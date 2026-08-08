@@ -118,7 +118,7 @@ const HabitTrackerCard = ({
                 </button>
             </div>
 
-            <div className="mt-6 max-h-80 space-y-3 overflow-y-auto pr-2">
+            <div className="mt-6 max-h-100 space-y-3 overflow-y-auto pr-2">
                 {habits.map((habit) => (
                     <div
                         key={habit.id}
