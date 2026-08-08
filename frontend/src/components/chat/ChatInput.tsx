@@ -27,7 +27,13 @@ const ChatInput = ({
 
     return (
         <div className="shrink-0 bg-slate-50 px-4 py-4">
-            <div className="mx-auto flex w-full max-w-4xl items-center gap-2 rounded-2xl border border-slate-300 bg-white px-3 py-2 shadow-sm sm:gap-3 sm:px-4 sm:py-3">
+            <div
+                className={`mx-auto flex w-full max-w-4xl items-center gap-2 rounded-2xl border bg-white px-3 py-2 shadow-sm transition sm:gap-3 sm:px-4 sm:py-3 ${
+                    question.trim()
+                        ? "border-teal-500 ring-2 ring-teal-100"
+                        : "border-slate-300 focus-within:border-teal-400 focus-within:ring-2 focus-within:ring-teal-100"
+                }`}
+            >
                 <input
                     type="text"
                     value={question}

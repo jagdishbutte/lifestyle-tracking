@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { PanelRightClose, PanelRightOpen, X } from "lucide-react";
+import { PanelRightClose, PanelRightOpen, X, ArrowLeft } from "lucide-react";
 
 import AppShell from "../components/common/AppShell";
 import ChatSidebar from "../components/chat/ChatSidebar";
@@ -16,6 +16,7 @@ import {
     updateChatTitle,
 } from "../services/aiService";
 import { useChatStore } from "../store/chatStore";
+import { useNavigate } from "react-router-dom";
 
 const ChatPage = () => {
     const [question, setQuestion] = useState("");
@@ -31,6 +32,7 @@ const ChatPage = () => {
         updateSessionName,
         deleteSession,
     } = useChatStore();
+    const navigate = useNavigate();
 
     useEffect(() => {
         document.body.style.overflow = sidebarOpen ? "hidden" : "";
@@ -192,14 +194,31 @@ const ChatPage = () => {
             <div className="relative flex h-[calc(100vh-7rem)] overflow-hidden rounded-xl bg-slate-50">
                 {/* Main */}
                 <div className="relative flex min-w-0 flex-1 flex-col">
-                    <div className="flex h-14 shrink-0 items-center justify-end px-3 sm:absolute sm:right-3 sm:top-3 sm:z-10 sm:h-auto sm:px-0">
+                    <div className="absolute left-0 top-0 z-10">
+                        <button
+                            onClick={() => navigate("/dashboard")}
+                            aria-label="Back to dashboard"
+                            className="rounded-lg border border-slate-200 bg-white p-2 text-slate-600 shadow-sm transition hover:bg-slate-100 active:bg-slate-200"
+                        >
+                            <ArrowLeft size={20} />
+                        </button>
+                    </div>
+
+                    <div className="absolute right-0 top-0 z-10">
                         {!sidebarOpen && (
                             <button
                                 onClick={() => setSidebarOpen(true)}
                                 aria-label="Open chat history"
-                                className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-100 active:bg-slate-200"
+                                className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-100 active:bg-slate-200 sm:h-10 sm:w-10 sm:rounded-xl"
                             >
-                                <PanelRightOpen size={20} />
+                                <PanelRightOpen
+                                    size={16}
+                                    className="sm:hidden"
+                                />
+                                <PanelRightOpen
+                                    size={20}
+                                    className="hidden sm:block"
+                                />
                             </button>
                         )}
                     </div>

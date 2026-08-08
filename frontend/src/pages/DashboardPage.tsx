@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Moon, Droplets, Flame, CheckCircle2 } from "lucide-react";
+import { Moon, Droplets, Flame, CheckCircle2, ArrowRight, MessageCircle } from "lucide-react";
 import toast from "react-hot-toast";
 
 import AppShell from "../components/common/AppShell";
@@ -17,6 +17,7 @@ import { getErrorMessage } from "../utils/errorHandler";
 import type { DashboardSummary, StatCardProps } from "../types/dashboard";
 import { getProfile } from "../services/profileService";
 import type { UserResponse } from "../types/profile";
+import { useNavigate } from "react-router-dom";
 
 const DashboardPage = () => {
     const [user, setUser] = useState<UserResponse | null>(null);
@@ -34,6 +35,7 @@ const DashboardPage = () => {
         completedHabits: 0,
         totalHabits: 0,
     });
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loadDashboard = async () => {
@@ -99,15 +101,34 @@ const DashboardPage = () => {
     return (
         <AppShell>
             <div>
-                <h1 className="text-3xl font-bold text-slate-900">
-                    Welcome back, {user?.firstName}! 👋
-                </h1>
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h1 className="text-3xl font-bold text-slate-900">
+                            Welcome back, {user?.firstName}! 👋
+                        </h1>
 
-                <p className="mt-2 text-slate-600">
-                    {hasStartedDay
-                        ? "You're on track today. Keep it up!"
-                        : "Complete today's check-in to get started."}
-                </p>
+                        <p className="mt-2 text-slate-600">
+                            {hasStartedDay
+                                ? "You're on track today. Keep it up!"
+                                : "Complete today's check-in to get started."}
+                        </p>
+                    </div>
+
+                    <button
+                        onClick={() => navigate("/chat")}
+                        className="group inline-flex items-center justify-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-4 py-2.5 text-sm font-semibold text-teal-700 shadow-sm transition hover:border-teal-300 hover:bg-teal-100 hover:text-teal-800 active:scale-[0.98]"
+                    >
+                        <MessageCircle
+                            size={17}
+                            className="transition-transform group-hover:scale-110"
+                        />
+                        Talk With Lifestyle Coach
+                        <ArrowRight
+                            size={16}
+                            className="transition-transform group-hover:translate-x-0.5"
+                        />
+                    </button>
+                </div>
 
                 <div className="mt-8 grid grid-cols-2 gap-6 xl:grid-cols-4">
                     {stats.map((stat) => (

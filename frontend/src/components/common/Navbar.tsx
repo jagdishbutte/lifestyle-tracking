@@ -56,7 +56,7 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
                         to="/dashboard"
                         className="text-xl font-bold text-teal-600"
                     >
-                        LifeLens
+                        LifeTrack.AI
                     </Link>
                 </div>
 
@@ -89,7 +89,7 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
                                 👤 My Profile
                             </button>
 
-                            <button
+                            {/* <button
                                 onClick={() => {
                                     // Add functionality later
                                     setIsOpen(false);
@@ -107,7 +107,7 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
                                 className="w-full px-4 py-3 text-left text-sm hover:bg-slate-100"
                             >
                                 📊 Analytics
-                            </button>
+                            </button> */}
 
                             <div className="border-t border-slate-100">
                                 <button
