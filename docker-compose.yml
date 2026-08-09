@@ -1,0 +1,27 @@
+name: lifestyle-ai
+
+services:
+
+  backend:
+    image: jagdishbutte/lifestyle-backend:latest
+    container_name: lifestyle-backend
+
+    env_file:
+      - ./backend.env
+
+    restart: unless-stopped
+
+    ports:
+      - "8080:8080"
+
+  ai:
+    image: jagdishbutte/lifestyle-ai:latest
+    container_name: lifestyle-ai
+
+    env_file:
+      - ./ai.env
+
+    restart: unless-stopped
+
+    ports:
+      - "8000:8000"
