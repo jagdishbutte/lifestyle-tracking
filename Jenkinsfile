@@ -3,9 +3,8 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "jagdishbutte/lifestyle-ai"
-        IMAGE_TAG = "latest"
-        CONTAINER_NAME = "lifestyle-ai-backend"
+        BACKEND_IMAGE = "jagdishbutte/lifestyle-backend:latest"
+        AI_IMAGE = "jagdishbutte/lifestyle-ai:latest"
     }
 
     stages {
@@ -16,24 +15,39 @@ pipeline {
             }
         }
 
-        stage('Build Jar') {
+        // ===========================
+        // Build Spring
+        // ===========================
+
+        stage('Build Backend') {
             steps {
                 dir('backend') {
                     sh 'mvn clean package -DskipTests'
+                    sh "docker build -t ${BACKEND_IMAGE} ."
                 }
             }
         }
 
-        stage('Build Docker Image') {
+        // ===========================
+        // Build FastAPI
+        // ===========================
+
+        stage('Build AI') {
             steps {
-                dir('backend') {
-                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                dir('ai-service') {
+                    sh "docker build -t ${AI_IMAGE} ."
                 }
             }
         }
 
-        stage('Push Docker Image') {
+        // ===========================
+        // Push Images
+        // ===========================
+
+        stage('Push Images') {
+
             steps {
+
                 withCredentials([
                     usernamePassword(
                         credentialsId: 'DockerHubCreds',
@@ -44,31 +58,35 @@ pipeline {
 
                     sh '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker push ${IMAGE_NAME}:${IMAGE_TAG}
+
+                        docker push ${BACKEND_IMAGE}
+                        docker push ${AI_IMAGE}
                     '''
                 }
             }
         }
 
+        // ===========================
+        // Deploy
+        // ===========================
+
         stage('Deploy') {
+
             steps {
 
                 withCredentials([
-                    file(credentialsId: 'backend-env', variable: 'ENV_FILE')
+                    file(credentialsId: 'backend-env', variable: 'BACKEND_ENV'),
+                    file(credentialsId: 'ai-env', variable: 'AI_ENV')
                 ]) {
 
                     sh '''
-                        docker pull ${IMAGE_NAME}:${IMAGE_TAG}
 
-                        docker stop ${CONTAINER_NAME} || true
-                        docker rm ${CONTAINER_NAME} || true
+                        cp "$BACKEND_ENV" backend.env
+                        cp "$AI_ENV" ai.env
 
-                        docker run -d \
-                          --name ${CONTAINER_NAME} \
-                          --restart unless-stopped \
-                          --env-file "$ENV_FILE" \
-                          -p 8080:8080 \
-                          ${IMAGE_NAME}:${IMAGE_TAG}
+                        docker compose pull
+                        docker compose up -d
+
                     '''
                 }
             }
