@@ -15,62 +15,95 @@ pipeline {
             }
         }
 
-        // ===========================
-        // Build Spring
-        // ===========================
+        stage('Detect Changes') {
+            steps {
+                script {
+
+                    def changedFiles = ""
+
+                    try {
+                        changedFiles = sh(
+                            script: "git diff --name-only HEAD~1 HEAD",
+                            returnStdout: true
+                        ).trim()
+                    } catch (Exception e) {
+                        echo "First build detected. Building everything."
+                        env.BUILD_BACKEND = "true"
+                        env.BUILD_AI = "true"
+                        return
+                    }
+
+                    echo "Changed Files:\n${changedFiles}"
+
+                    def files = changedFiles.tokenize("\n")
+
+                    env.BUILD_BACKEND = files.any {
+                        it.startsWith("backend/")
+                    }.toString()
+
+                    env.BUILD_AI = files.any {
+                        it.startsWith("ai-service/")
+                    }.toString()
+
+                    def buildAll = files.any {
+                        it == "docker-compose.yml" ||
+                        it == "Jenkinsfile"
+                    }
+
+                    if (buildAll) {
+                        env.BUILD_BACKEND = "true"
+                        env.BUILD_AI = "true"
+                    }
+
+                    echo "BUILD_BACKEND = ${env.BUILD_BACKEND}"
+                    echo "BUILD_AI = ${env.BUILD_AI}"
+                }
+            }
+        }
 
         stage('Build Backend') {
+
+            when {
+                expression {
+                    env.BUILD_BACKEND == "true"
+                }
+            }
+
             steps {
                 dir('backend') {
-                    sh 'mvn clean package -DskipTests'
-                    sh "docker build -t ${BACKEND_IMAGE} ."
-                }
-            }
-        }
-
-        // ===========================
-        // Build FastAPI
-        // ===========================
-
-        stage('Build AI') {
-            steps {
-                dir('ai-service') {
-                    sh "docker build -t ${AI_IMAGE} ."
-                }
-            }
-        }
-
-        // ===========================
-        // Push Images
-        // ===========================
-
-        stage('Push Images') {
-
-            steps {
-
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'DockerHubCreds',
-                        usernameVariable: 'DOCKER_USER',
-                        passwordVariable: 'DOCKER_PASS'
-                    )
-                ]) {
-
                     sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-
-                        docker push ${BACKEND_IMAGE}
-                        docker push ${AI_IMAGE}
+                        mvn clean package -DskipTests
+                        docker build -t ${BACKEND_IMAGE} .
                     '''
                 }
             }
         }
 
-        // ===========================
-        // Deploy
-        // ===========================
+        stage('Build AI') {
+
+            when {
+                expression {
+                    env.BUILD_AI == "true"
+                }
+            }
+
+            steps {
+                dir('ai-service') {
+                    sh '''
+                        docker build -t ${AI_IMAGE} .
+                    '''
+                }
+            }
+        }
 
         stage('Deploy') {
+
+            when {
+                expression {
+                    env.BUILD_BACKEND == "true" ||
+                    env.BUILD_AI == "true"
+                }
+            }
 
             steps {
 
@@ -80,15 +113,31 @@ pipeline {
                 ]) {
 
                     sh '''
-
                         cp "$BACKEND_ENV" backend.env
                         cp "$AI_ENV" ai.env
-
-                        docker compose pull
-                        docker compose up -d
-
                     '''
+
+                    script {
+
+                        if (env.BUILD_BACKEND == "true") {
+                            sh "docker compose up -d backend"
+                        }
+
+                        if (env.BUILD_AI == "true") {
+                            sh "docker compose up -d ai"
+                        }
+                    }
                 }
+            }
+        }
+
+        stage('Cleanup') {
+
+            steps {
+
+                sh '''
+                    docker image prune -f
+                '''
             }
         }
     }
@@ -101,6 +150,10 @@ pipeline {
 
         failure {
             echo "Deployment Failed ❌"
+        }
+
+        always {
+            cleanWs()
         }
     }
 }
