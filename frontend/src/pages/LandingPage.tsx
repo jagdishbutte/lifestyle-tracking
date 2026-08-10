@@ -175,7 +175,7 @@ const LandingPage = () => {
 
             {/* Footer */}
             <footer className="border-t border-slate-200 py-5 text-center text-sm text-slate-500">
-                © 2026 Lifestyle Intelligence Platform
+                © 2026 LifeTrack.AI
             </footer>
         </div>
     );
