@@ -15,60 +15,7 @@ pipeline {
             }
         }
 
-        stage('Detect Changes') {
-            steps {
-                script {
-
-                    def changedFiles = ""
-
-                    try {
-                        changedFiles = sh(
-                            script: "git diff --name-only HEAD~1 HEAD",
-                            returnStdout: true
-                        ).trim()
-                    } catch (Exception e) {
-                        echo "First build detected. Building everything."
-                        env.BUILD_BACKEND = "true"
-                        env.BUILD_AI = "true"
-                        return
-                    }
-
-                    echo "Changed Files:\n${changedFiles}"
-
-                    def files = changedFiles.tokenize("\n")
-
-                    env.BUILD_BACKEND = files.any {
-                        it.startsWith("backend/")
-                    }.toString()
-
-                    env.BUILD_AI = files.any {
-                        it.startsWith("ai-service/")
-                    }.toString()
-
-                    def buildAll = files.any {
-                        it == "docker-compose.yml" ||
-                        it == "Jenkinsfile"
-                    }
-
-                    if (buildAll) {
-                        env.BUILD_BACKEND = "true"
-                        env.BUILD_AI = "true"
-                    }
-
-                    echo "BUILD_BACKEND = ${env.BUILD_BACKEND}"
-                    echo "BUILD_AI = ${env.BUILD_AI}"
-                }
-            }
-        }
-
         stage('Build Backend') {
-
-            when {
-                expression {
-                    env.BUILD_BACKEND == "true"
-                }
-            }
-
             steps {
                 dir('backend') {
                     sh '''
@@ -80,13 +27,6 @@ pipeline {
         }
 
         stage('Build AI') {
-
-            when {
-                expression {
-                    env.BUILD_AI == "true"
-                }
-            }
-
             steps {
                 dir('ai-service') {
                     sh '''
@@ -97,14 +37,6 @@ pipeline {
         }
 
         stage('Deploy') {
-
-            when {
-                expression {
-                    env.BUILD_BACKEND == "true" ||
-                    env.BUILD_AI == "true"
-                }
-            }
-
             steps {
 
                 withCredentials([
@@ -115,26 +47,15 @@ pipeline {
                     sh '''
                         cp "$BACKEND_ENV" backend.env
                         cp "$AI_ENV" ai.env
+
+                        docker compose up -d backend ai
                     '''
-
-                    script {
-
-                        if (env.BUILD_BACKEND == "true") {
-                            sh "docker compose up -d backend"
-                        }
-
-                        if (env.BUILD_AI == "true") {
-                            sh "docker compose up -d ai"
-                        }
-                    }
                 }
             }
         }
 
         stage('Cleanup') {
-
             steps {
-
                 sh '''
                     docker image prune -f
                 '''
