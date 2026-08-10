@@ -1,5 +1,5 @@
 import { apiConnector } from "../api/apiConnector";
-import { CHAT_API } from "../api/apiEndpoints";
+import { CHAT_API, INSIGHTS_API } from "../api/apiEndpoints";
 
 import type { ApiResponse } from "../types/common";
 
@@ -9,6 +9,7 @@ import type {
     UpdateChatTitleRequest,
     // ChatRequest,
 } from "../types/chat";
+import type { WeeklyInsightsResponse } from "../types/insights";
 
 export const getChatHistory = async (): Promise<
     ApiResponse<ChatSessionsList>
@@ -79,14 +80,24 @@ export const deleteChat = async (
     return response.data;
 };
 
-// export const streamChat = (
-//     request: ChatRequest,
-//     onMessage: (event: MessageEvent) => void
-// ) => {
+export const refreshInsights = async (): Promise<ApiResponse<string>> => {
 
-//     const eventSource = new EventSource(
-//         `${CHAT_API.CHAT}`
-//     );
+    const response =
+        await apiConnector<ApiResponse<string>>(
+            "POST",
+            INSIGHTS_API.REFRESH
+        );
 
-//     return eventSource;
-// };
+    return response.data;
+};
+
+export const getLatestInsights = async (): Promise<ApiResponse<WeeklyInsightsResponse>> => {
+
+    const response =
+        await apiConnector<ApiResponse<WeeklyInsightsResponse>>(
+            "GET",
+            INSIGHTS_API.LATEST
+        );
+
+    return response.data;
+};

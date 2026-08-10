@@ -13,6 +13,7 @@ import ExpenseFormModal from "../expenses/ExpenseFormModal";
 import ConfirmModal from "../common/ConfirmModal";
 import { useNavigate } from "react-router-dom";
 import ExpenseCard from "../expenses/ExpenseCard";
+import { useInsightStore } from "../../store/insightStore";
 
 const QuickExpenseCard = () => {
     const [todayExpenses, setTodayExpenses] =
@@ -23,6 +24,7 @@ const QuickExpenseCard = () => {
     const [deleteId, setDeleteId] = useState<number | null>(null);
     const [deleteLoading, setDeleteLoading] = useState(false);
     const navigate = useNavigate();
+    const { insights, insightsLoading } = useInsightStore();
 
     const formatCurrency = (amount: number) =>
         new Intl.NumberFormat("en-IN", {
@@ -76,11 +78,17 @@ const QuickExpenseCard = () => {
                             ✨
                         </span>
 
-                        <p className="text-sm font-semibold leading-6 tracking-tight text-slate-800">
-                            No insights available yet. Keep logging your
-                            activities regularly to unlock personalized
-                            AI-powered lifestyle insights.
-                        </p>
+                        {insightsLoading ? (
+                            <div className="flex-1 space-y-2">
+                                <div className="h-4 w-full animate-pulse rounded-md bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200" />
+                                <div className="h-4 w-5/6 animate-pulse rounded-md bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200" />
+                            </div>
+                        ) : (
+                            <p className="text-md leading-6 tracking-tight text-slate-800">
+                                {insights?.insights.checkins ??
+                                    "No insights available yet. Keep logging your activities consistently to unlock personalized AI insights."}
+                            </p>
+                        )}
                     </div>
                 </div>
                 <div className="mt-4 flex items-center justify-between">

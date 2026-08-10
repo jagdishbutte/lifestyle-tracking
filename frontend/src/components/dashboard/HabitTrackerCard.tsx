@@ -11,6 +11,7 @@ import {
 } from "../../services/habitService";
 import { useNavigate } from "react-router-dom";
 import { useDashboardStore } from "../../store/dashboardStore";
+import { useInsightStore } from "../../store/insightStore";
 
 interface HabitTrackerCardProps {
     completedHabits: number;
@@ -24,6 +25,7 @@ const HabitTrackerCard = ({
     const [habits, setHabits] = useState<HabitItem[]>([]);
     const navigate = useNavigate();
     const { triggerRefresh } = useDashboardStore();
+    const { insights, insightsLoading } = useInsightStore();
 
     useEffect(() => {
         const loadHabits = async () => {
@@ -108,11 +110,17 @@ const HabitTrackerCard = ({
                         ✨
                     </span>
 
-                    <p className="text-sm font-semibold leading-6 tracking-tight text-slate-800">
-                        No insights available yet. Keep logging your activities
-                        regularly to unlock personalized AI-powered lifestyle
-                        insights.
-                    </p>
+                    {insightsLoading ? (
+                        <div className="flex-1 space-y-2">
+                            <div className="h-4 w-full animate-pulse rounded-md bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200" />
+                            <div className="h-4 w-5/6 animate-pulse rounded-md bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200" />
+                        </div>
+                    ) : (
+                        <p className="text-md leading-6 tracking-tight text-slate-800">
+                            {insights?.insights.habits ??
+                                "No insights available yet. Keep logging your activities consistently to unlock personalized AI insights."}
+                        </p>
+                    )}
                 </div>
             </div>
 

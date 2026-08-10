@@ -25,6 +25,8 @@ import type { DashboardSummary, StatCardProps } from "../types/dashboard";
 import { getProfile } from "../services/profileService";
 import type { UserResponse } from "../types/profile";
 import { useNavigate } from "react-router-dom";
+import { useInsightStore } from "../store/insightStore";
+import { getLatestInsights, refreshInsights } from "../services/aiService";
 
 const DashboardPage = () => {
     const [user, setUser] = useState<UserResponse | null>(null);
@@ -43,6 +45,40 @@ const DashboardPage = () => {
         totalHabits: 0,
     });
     const navigate = useNavigate();
+    const { setInsights, setInsightsLoading } = useInsightStore();
+
+    const loadInsights = async () => {
+        try {
+            const response = await getLatestInsights();
+
+            if (response.success) {
+                setInsights(response.data);
+            } else {
+                setInsights(null);
+            }
+        } catch (error) {
+            toast.error(getErrorMessage(error));
+        }
+    };
+
+    const handleRefreshInsights = async () => {
+        try {
+            setInsightsLoading(true);
+
+            const response = await refreshInsights();
+
+            if (response.success) {
+                toast.success("Insights refreshed successfully.");
+                await loadInsights();
+            } else {
+                toast.error(response.message);
+            }
+        } catch (error) {
+            toast.error(getErrorMessage(error));
+        } finally {
+            setInsightsLoading(false);
+        }
+    };
 
     useEffect(() => {
         const loadDashboard = async () => {
@@ -63,6 +99,10 @@ const DashboardPage = () => {
         getProfile().then((response) => {
             setUser(response.data);
         });
+    }, []);
+
+    useEffect(() => {
+        loadInsights();
     }, []);
 
     const stats: StatCardProps[] = [
@@ -123,9 +163,7 @@ const DashboardPage = () => {
 
                     <div className="flex w-full gap-3 sm:w-auto">
                         <button
-                            onClick={() => {
-                                /* refresh insights */
-                            }}
+                            onClick={handleRefreshInsights}
                             className="group flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm font-semibold text-amber-700 shadow-sm transition hover:border-amber-300 hover:bg-amber-100 hover:text-amber-800 active:scale-[0.98] sm:flex-none"
                         >
                             <Brain

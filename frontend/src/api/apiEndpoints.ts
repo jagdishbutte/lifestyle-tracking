@@ -57,3 +57,8 @@ export const CHAT_API = {
     UPDATE_TITLE: (sessionId: string) => `/api/ai/history/${sessionId}/title`,
     DELETE: (sessionId: string) =>`/api/ai/chat/${sessionId}`,
 };
+
+export const INSIGHTS_API = {
+    REFRESH: "/api/ai/insights/refresh",
+    LATEST: "/api/ai/insights",
+};

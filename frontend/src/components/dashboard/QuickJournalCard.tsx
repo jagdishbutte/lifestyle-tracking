@@ -13,6 +13,7 @@ import { getErrorMessage } from "../../utils/errorHandler";
 import ConfirmModal from "../common/ConfirmModal";
 import JournalFormModal from "../journals/JournalFormModal";
 import JournalCard from "../journals/JournalCard";
+import { useInsightStore } from "../../store/insightStore";
 
 const QuickJournalCard = () => {
     const navigate = useNavigate();
@@ -23,6 +24,7 @@ const QuickJournalCard = () => {
     const [showModal, setShowModal] = useState(false);
     const [deleteId, setDeleteId] = useState<number | null>(null);
     const [deleteLoading, setDeleteLoading] = useState(false);
+    const { insights, insightsLoading } = useInsightStore();
 
     const loadJournals = async () => {
         try {
@@ -69,11 +71,17 @@ const QuickJournalCard = () => {
                             ✨
                         </span>
 
-                        <p className="text-sm font-semibold leading-6 tracking-tight text-slate-800">
-                            No insights available yet. Keep logging your
-                            activities regularly to unlock personalized
-                            AI-powered lifestyle insights.
-                        </p>
+                        {insightsLoading ? (
+                            <div className="flex-1 space-y-2">
+                                <div className="h-4 w-full animate-pulse rounded-md bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200" />
+                                <div className="h-4 w-5/6 animate-pulse rounded-md bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200" />
+                            </div>
+                        ) : (
+                            <p className="text-md leading-6 tracking-tight text-slate-800">
+                                {insights?.insights.checkins ??
+                                    "No insights available yet. Keep logging your activities consistently to unlock personalized AI insights."}
+                            </p>
+                        )}
                     </div>
                 </div>
 
