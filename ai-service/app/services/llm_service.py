@@ -18,7 +18,7 @@ summarizer_llm = ChatGroq(
 )
 
 insight_llm = ChatGroq(
-    model="openai/gpt-oss-20b",
+    model="openai/gpt-oss-120b",
     temperature=0.2,
     api_key=settings.GROQ_API_KEY,
 ).with_structured_output(WeeklyInsightResponse)

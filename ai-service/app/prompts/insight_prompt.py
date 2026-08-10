@@ -15,8 +15,8 @@ Guidelines:
 1. Base every insight ONLY on the provided data.
 2. Never fabricate, assume, or infer facts that are not supported by the data.
 3. Identify meaningful patterns, trends, improvements, declines, and correlations across modules whenever possible.
-4. Keep each module insight concise, specific, and easy to understand (maximum 30 words).
-5. Generate exactly three actionable, personalized recommendations (maximum 40 words each).
+4. Keep each module insight concise, specific, and easy to understand (maximum 15 words).
+5. Generate exactly three actionable, personalized recommendations (maximum 25 words each).
 6. Prioritize recommendations that have the greatest positive impact on the user's overall lifestyle.
 7. Write in a supportive, motivating, and non-judgmental tone.
 8. Do not repeat the same advice across multiple recommendations.
