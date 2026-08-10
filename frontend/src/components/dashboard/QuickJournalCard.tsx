@@ -78,7 +78,7 @@ const QuickJournalCard = () => {
                             </div>
                         ) : (
                             <p className="text-md leading-6 tracking-tight text-slate-800">
-                                {insights?.insights.checkins ??
+                                {insights?.insights.journal ??
                                     "No insights available yet. Keep logging your activities consistently to unlock personalized AI insights."}
                             </p>
                         )}
