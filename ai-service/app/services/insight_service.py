@@ -45,7 +45,7 @@ def generate_weekly_insight(
     weekly_data: dict,
 ) -> WeeklyInsightResponse:
 
-    print("weekly_data: ", weekly_data)
+    # print("weekly_data: ", weekly_data)
 
     return insight_llm.invoke(
         [

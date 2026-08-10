@@ -4,7 +4,9 @@ import com.lifestyleai.client.AiServiceClient;
 import com.lifestyleai.dto.ai.AiChatRequest;
 import com.lifestyleai.dto.ai.ChatHistoryResponse;
 import com.lifestyleai.dto.ai.ChatSessionsListResponse;
+import com.lifestyleai.dto.ai.GenerateInsightsRequest;
 import com.lifestyleai.dto.ai.UpdateChatTitleRequest;
+import com.lifestyleai.dto.ai.WeeklyInsightsResponse;
 import com.lifestyleai.dto.common.ApiResponse;
 import com.lifestyleai.service.common.UserHelper;
 
@@ -60,6 +62,24 @@ public class AiChatService {
                 sessionId,
                 request
         );
+    }
+    
+    public ApiResponse<String> refreshInsights() {
+
+        GenerateInsightsRequest request = new GenerateInsightsRequest(
+                userHelper.getCurrentUserId()
+        );
+
+        return aiServiceClient.refreshInsights(request);
+    }
+
+    public ApiResponse<WeeklyInsightsResponse> getLatestInsights() {
+
+        GenerateInsightsRequest request = new GenerateInsightsRequest(
+                userHelper.getCurrentUserId()
+        );
+
+        return aiServiceClient.getLatestInsights(request);
     }
 
 }

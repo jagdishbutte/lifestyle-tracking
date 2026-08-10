@@ -3,7 +3,9 @@ package com.lifestyleai.client;
 import com.lifestyleai.dto.ai.AiChatRequest;
 import com.lifestyleai.dto.ai.ChatHistoryResponse;
 import com.lifestyleai.dto.ai.ChatSessionsListResponse;
+import com.lifestyleai.dto.ai.GenerateInsightsRequest;
 import com.lifestyleai.dto.ai.UpdateChatTitleRequest;
+import com.lifestyleai.dto.ai.WeeklyInsightsResponse;
 import com.lifestyleai.dto.common.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -97,6 +99,36 @@ public class AiServiceClient {
                 .bodyValue(request)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<ApiResponse<String>>() {})
+                .block();
+    }
+    
+    public ApiResponse<String> refreshInsights(
+            GenerateInsightsRequest request
+    ) {
+
+        return webClientBuilder
+                .baseUrl(aiServiceBaseUrl)
+                .build()
+                .post()
+                .uri("/insights/generate")
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ApiResponse<String>>() {})
+                .block();
+    }
+    
+    public ApiResponse<WeeklyInsightsResponse> getLatestInsights(
+            GenerateInsightsRequest request
+    ) {
+
+        return webClientBuilder
+                .baseUrl(aiServiceBaseUrl)
+                .build()
+                .post()
+                .uri("/insights/latest")
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ApiResponse<WeeklyInsightsResponse>>() {})
                 .block();
     }
 }

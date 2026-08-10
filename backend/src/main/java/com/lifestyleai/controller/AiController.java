@@ -4,6 +4,7 @@ import com.lifestyleai.dto.ai.ChatHistoryResponse;
 import com.lifestyleai.dto.ai.ChatRequest;
 import com.lifestyleai.dto.ai.ChatSessionsListResponse;
 import com.lifestyleai.dto.ai.UpdateChatTitleRequest;
+import com.lifestyleai.dto.ai.WeeklyInsightsResponse;
 import com.lifestyleai.dto.common.ApiResponse;
 import com.lifestyleai.service.AiChatService;
 import lombok.RequiredArgsConstructor;
@@ -86,9 +87,17 @@ public class AiController {
                 request
         );
     }
-    @GetMapping("/insights")
-    public void getInsights() {
+    
+    @PostMapping("/insights/refresh")
+    public ApiResponse<String> refreshInsights() {
 
+        return aiChatService.refreshInsights();
+    }
+
+    @GetMapping("/insights")
+    public ApiResponse<WeeklyInsightsResponse> getLatestInsights() {
+
+        return aiChatService.getLatestInsights();
     }
 
 }
