@@ -7,7 +7,7 @@ from app.models.chat_models import ChatRequest, UpdateTitleRequest, ApiResponse
 from app.models.chat_models import RuntimeContext
 from app.services.agent_service import agent
 from app.services.chat_summary_service import generate_summary
-from app.prompts.system_prompt import SYSTEM_PROMPT
+from app.prompts.chat_prompt import SYSTEM_PROMPT
 from app.services.chat_history_service import (
     append_chat,
     get_summary,

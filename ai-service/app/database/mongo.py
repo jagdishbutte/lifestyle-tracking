@@ -6,3 +6,4 @@ database = client[settings.MONGO_DATABASE]
 
 test_logs = database["test_logs"]
 chat_sessions = database["chat_sessions"]
+weekly_insights = database["user_insights"]

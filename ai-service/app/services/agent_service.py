@@ -1,4 +1,6 @@
 from langchain.agents import create_agent
+from app.services.llm_service import insight_llm
+from app.tools.weekly_insights_tool import weekly_insights_tool
 
 from app.services.llm_service import llm
 from app.tools import (

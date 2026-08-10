@@ -20,3 +20,6 @@ class CheckinAnalyticsInput(DateRangeInput):
 
 class JournalAnalyticsInput(DateRangeInput):
     pass
+
+class WeeklyInsightInput(DateRangeInput):
+    pass
