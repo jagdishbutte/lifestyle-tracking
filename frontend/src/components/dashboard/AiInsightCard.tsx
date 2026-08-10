@@ -1,6 +1,25 @@
 import { Brain } from "lucide-react";
 
-import { insights } from "../../data/dashboard";
+const gettingStarted = [
+    {
+        id: 1,
+        title: "Complete your Daily Check-in",
+        description:
+            "Log your sleep, water intake, steps, and wellbeing every day to help AI understand your lifestyle.",
+    },
+    {
+        id: 2,
+        title: "Track Habits, Meals & Expenses",
+        description:
+            "Build consistent records of your habits, diet, and spending to unlock meaningful weekly insights.",
+    },
+    {
+        id: 3,
+        title: "Write a Journal Entry",
+        description:
+            "Reflect on your day in a few sentences. Your journal helps AI identify emotional and behavioral patterns.",
+    },
+];
 
 const AiInsightCard = () => {
     return (
@@ -25,17 +44,23 @@ const AiInsightCard = () => {
             </div>
 
             <div className="mt-6 space-y-4">
-                {insights.map((insight: any) => (
+                {gettingStarted.map((step) => (
                     <div
-                        key={insight.id}
+                        key={step.id}
                         className="rounded-xl border border-slate-100 bg-slate-50 p-4"
                     >
-                        <h3 className="font-medium">
-                            {insight.title}
-                        </h3>
+                        <div className="flex items-center gap-3">
+                            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-teal-500 text-sm font-semibold text-white">
+                                {step.id}
+                            </div>
 
-                        <p className="mt-2 text-sm text-slate-600">
-                            {insight.description}
+                            <h3 className="font-semibold text-slate-900">
+                                {step.title}
+                            </h3>
+                        </div>
+
+                        <p className="mt-3 pl-10 text-sm leading-6 text-slate-600">
+                            {step.description}
                         </p>
                     </div>
                 ))}

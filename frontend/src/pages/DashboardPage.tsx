@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { Moon, Droplets, Flame, CheckCircle2, ArrowRight, MessageCircle } from "lucide-react";
+import {
+    Moon,
+    Droplets,
+    Flame,
+    CheckCircle2,
+    MessageCircle,
+    Brain,
+} from "lucide-react";
 import toast from "react-hot-toast";
 
 import AppShell from "../components/common/AppShell";
@@ -114,20 +121,31 @@ const DashboardPage = () => {
                         </p>
                     </div>
 
-                    <button
-                        onClick={() => navigate("/chat")}
-                        className="group inline-flex items-center justify-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-4 py-2.5 text-sm font-semibold text-teal-700 shadow-sm transition hover:border-teal-300 hover:bg-teal-100 hover:text-teal-800 active:scale-[0.98]"
-                    >
-                        <MessageCircle
-                            size={17}
-                            className="transition-transform group-hover:scale-110"
-                        />
-                        Talk With Lifestyle Coach
-                        <ArrowRight
-                            size={16}
-                            className="transition-transform group-hover:translate-x-0.5"
-                        />
-                    </button>
+                    <div className="flex w-full gap-3 sm:w-auto">
+                        <button
+                            onClick={() => {
+                                /* refresh insights */
+                            }}
+                            className="group flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm font-semibold text-amber-700 shadow-sm transition hover:border-amber-300 hover:bg-amber-100 hover:text-amber-800 active:scale-[0.98] sm:flex-none"
+                        >
+                            <Brain
+                                size={17}
+                                className="transition-transform group-hover:rotate-6"
+                            />
+                            Refresh Insights
+                        </button>
+
+                        <button
+                            onClick={() => navigate("/chat")}
+                            className="group flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-teal-200 bg-teal-50 px-4 py-2.5 text-sm font-semibold text-teal-700 shadow-sm transition hover:border-teal-300 hover:bg-teal-100 hover:text-teal-800 active:scale-[0.98] sm:flex-none"
+                        >
+                            <MessageCircle
+                                size={17}
+                                className="transition-transform group-hover:scale-110"
+                            />
+                            LifeStyle Coach
+                        </button>
+                    </div>
                 </div>
 
                 <div className="mt-8 grid grid-cols-2 gap-6 xl:grid-cols-4">

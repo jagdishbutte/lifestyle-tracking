@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { HeartPulse } from "lucide-react";
 
 import type {
     DailyCheckInRequest,
@@ -41,6 +42,7 @@ const QuickCheckInCard = () => {
         useState<DailyCheckInResponse>(defaultCheckIn);
     const [processing, setProcessing] = useState(false);
     const { triggerRefresh } = useDashboardStore();
+    // const { insights } = weeklyInsights;
 
     const handleSave = async () => {
         if (!checkIn) return;
@@ -86,15 +88,34 @@ const QuickCheckInCard = () => {
 
     return (
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h2 className="text-xl font-bold text-slate-900">
-                        Today's Check-In
-                    </h2>
+            <div className="overflow-hidden rounded-xl border border-teal-200 bg-gradient-to-r from-teal-50 via-white to-cyan-50 shadow-[0_4px_20px_rgba(20,184,166,0.08)]">
+                <div className="flex items-start gap-3 border-l-4 border-teal-500 px-4 py-3">
+                    <span className="mt-0.5 shrink-0 text-xl text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.9)]">
+                        ✨
+                    </span>
 
-                    <p className="mt-1 text-sm text-slate-500">
-                        Update today's wellness metrics
+                    <p className="text-sm font-semibold leading-6 tracking-tight text-slate-800">
+                        No insights available yet. Keep logging your activities
+                        regularly to unlock personalized AI-powered lifestyle
+                        insights.
                     </p>
+                </div>
+            </div>
+            <div className="mt-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <div className="rounded-xl bg-teal-100 p-3">
+                        <HeartPulse size={22} className="text-teal-600" />
+                    </div>
+
+                    <div>
+                        <h2 className="text-xl font-semibold">
+                            Today's Check-In
+                        </h2>
+
+                        <p className="text-sm text-slate-500">
+                            Update today's wellness metrics
+                        </p>
+                    </div>
                 </div>
 
                 <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-600">
