@@ -24,6 +24,7 @@ class WeeklyInsightResponse(BaseModel):
 class WeeklyInsightDocument(BaseModel):
     user_id: int
     insight_id: str
+    insight_date: str
     insights: InsightSections
     recommendations: list[str]
     created_at: datetime = Field(default_factory=now)

@@ -14,30 +14,51 @@ from app.models.insight_models import (
 from app.utils.datetime_utils import now
 
 
+from datetime import date
+from uuid import uuid4
+
 async def save_weekly_insight(
     user_id: int,
     insight: WeeklyInsightResponse,
 ) -> str:
+    
+    today_str = date.today().isoformat()
+    
+    new_insight_id = str(uuid4())
 
-    insight_id = str(uuid4())
+    query_filter = {
+        "user_id": user_id,
+        "insight_date": today_str
+    }
 
-    document = WeeklyInsightDocument(
-        user_id=user_id,
-        insight_id=insight_id,
-        insights=insight.insights,
-        recommendations=insight.recommendations,
-        created_at=now(),
-    )
+    update_operation = {
+        "$set": {
+            "insights": insight.insights.model_dump() if hasattr(insight.insights, "model_dump") else insight.insights,
+            "recommendations": insight.recommendations,
+            "updated_at": now()
+        },
+        "$setOnInsert": {
+            "insight_id": new_insight_id,
+            "created_at": now()
+        }
+    }
 
     try:
-        await weekly_insights.insert_one(
-            document.model_dump()
+        result = await weekly_insights.update_one(
+            query_filter,
+            update_operation,
+            upsert=True  
         )
-        return insight_id
+
+        if result.upserted_id is None:
+            existing_doc = await weekly_insights.find_one(query_filter, {"insight_id": 1})
+            return existing_doc["insight_id"]
+        
+        return new_insight_id
 
     except Exception as exception:
         raise Exception(
-            f"Failed to save weekly insight: {exception}"
+            f"Failed to save or update weekly insight: {exception}"
         )
 
 
@@ -67,6 +88,6 @@ async def get_latest_weekly_insight(
 
     return await weekly_insights.find_one(
         {"user_id": user_id},
-        sort=[("created_at", -1)],
+        sort=[("insight_date", -1), ("created_at", -1)],
         projection={"_id": 0},
     )

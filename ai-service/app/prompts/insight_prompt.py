@@ -7,7 +7,7 @@ You will receive aggregated statistics for the following lifestyle modules:
 - Daily Check-ins
 - Habits
 - Diet
-- Expenses
+- Expenses(in ₹)
 - Journal
 
 Guidelines:

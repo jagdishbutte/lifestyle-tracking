@@ -66,26 +66,48 @@ def weekly_insights_tool(
         # =====================================================
 
         habits_sql = text("""
-            SELECT
-                COUNT(*) AS total_logs,
-                SUM(CASE WHEN hl.completed = true THEN 1 ELSE 0 END) AS completed,
-                SUM(CASE WHEN hl.completed = false THEN 1 ELSE 0 END) AS missed
-            FROM habit_logs hl
-            JOIN habits h ON h.id = hl.habit_id
-            WHERE h.user_id = :user_id
-            AND hl.log_date BETWEEN :start_date AND :end_date
+            WITH date_range AS (
+                -- MySQL uses DATEDIFF(end, start) to count days between dates
+                SELECT (DATEDIFF(:end_date, :start_date) + 1) AS total_days
+            ),
+            user_habits AS (
+                -- Identify any habit that was relevant to this week
+                -- MySQL uses 1 for true / 0 for false natively
+                SELECT DISTINCT h.id
+                FROM habits h
+                LEFT JOIN habit_logs hl ON h.id = hl.habit_id 
+                    AND hl.log_date BETWEEN :start_date AND :end_date
+                WHERE h.user_id = :user_id
+                  AND (h.is_active = 1 OR hl.id IS NOT NULL)
+            ),
+            log_aggregates AS (
+                -- Aggregate the raw log data safely
+                SELECT
+                    COUNT(hl.id) AS raw_log_count,
+                    SUM(CASE WHEN hl.completed = 1 THEN 1 ELSE 0 END) AS completed_count
+                FROM habit_logs hl
+                JOIN user_habits uh ON hl.habit_id = uh.id
+                WHERE hl.log_date BETWEEN :start_date AND :end_date
+            )
+            SELECT 
+                COALESCE(la.completed_count, 0) AS completed,
+                -- Calculate total expected logs
+                ((SELECT COUNT(*) FROM user_habits) * (SELECT total_days FROM date_range)) AS total_expected_logs
+            FROM log_aggregates la;
         """)
 
-        habits = dict(
-            connection.execute(
-                habits_sql,
-                {
-                    "user_id": user_id,
-                    "start_date": start_date,
-                    "end_date": end_date,
-                },
-            ).mappings().first()
-        )
+        result = connection.execute(
+            habits_sql,
+            {
+                "user_id": user_id,
+                "start_date": start_date,
+                "end_date": end_date,
+            },
+        ).mappings().first()
+
+        habits = dict(result) if result else {"completed": 0, "total_expected_logs": 0}
+        completed = int(habits["completed"]) if habits["completed"] is not None else 0
+        total_expected = int(habits["total_expected_logs"]) if habits["total_expected_logs"] is not None else 0
 
         # =====================================================
         # DIET
@@ -242,11 +264,7 @@ def weekly_insights_tool(
 
         "habits": {
             **habits,
-            "completion_rate":
-                round(
-                    habits["completed"] * 100 / habits["total_logs"],
-                    2
-                ) if habits["total_logs"] else 0
+            "completion_rate": round((completed * 100) / total_expected, 2) if total_expected > 0 else 0.0
         },
 
         "diet": {
