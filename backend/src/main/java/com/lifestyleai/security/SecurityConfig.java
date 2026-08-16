@@ -47,6 +47,10 @@ public class SecurityConfig {
                         // Authentication
                         .requestMatchers("/api/auth/**")
                         .permitAll()
+                        
+                        // Actuator
+                        .requestMatchers("/actuator/**")
+                        .permitAll()
 
                         // Swagger
                         .requestMatchers(
@@ -76,8 +80,7 @@ public class SecurityConfig {
                 new DaoAuthenticationProvider(
                         customUserDetailsService);
 
-        provider.setPasswordEncoder(
-                passwordEncoder());
+        provider.setPasswordEncoder(passwordEncoder());
 
         return provider;
     }
@@ -89,8 +92,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration)
+    AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
             throws Exception {
 
         return configuration.getAuthenticationManager();
